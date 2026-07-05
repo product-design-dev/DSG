@@ -211,7 +211,7 @@ function App() {
             <li key={brand.id}>
               {brand.name}
               <button type="button" onClick={() => startEditing(brand)}>
-                Edit asdf
+                Edit
               </button>
               <button type="button" onClick={() => handleDelete(brand.id)}>
                 Delete
