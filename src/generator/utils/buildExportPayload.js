@@ -56,8 +56,17 @@ function applyOpacity(hex, opacity) {
   return `#${normalized}${alpha}`;
 }
 
+// #FF00FF marks an unresolved token in the exported payload (Figma
+// variables / tokens.lock.json) so a broken mapping is visually obvious
+// instead of silently exporting a wrong-but-plausible color. Warn too, since
+// this is a real data problem that would otherwise leave no diagnostic trail.
+function missingExportColor(context) {
+  console.warn(`[DSG] Unresolved color token in export payload (${context}) — using #FF00FF placeholder.`);
+  return "#FF00FF";
+}
+
 function resolveMappingToColor(brand, mapping) {
-  if (!mapping) return { value: "#FF00FF", primitiveAlias: null, gradientSpec: null };
+  if (!mapping) return { value: missingExportColor("no mapping"), primitiveAlias: null, gradientSpec: null };
   if (mapping.gradient && String(mapping.gradient).trim()) {
     const gid = String(mapping.gradient).trim();
     const def = brand.gradients?.[gid];
@@ -65,7 +74,7 @@ function resolveMappingToColor(brand, mapping) {
     const firstHex = gradientFirstStopHex(brand, gid);
     const gradientSpec = css ? gradientFigmaExport(brand, gid) : null;
     return {
-      value: firstHex || "#FF00FF",
+      value: firstHex || missingExportColor(`gradient "${gid}" has no resolvable first stop`),
       primitiveAlias: css ? `gradient/${gid}` : null,
       gradientSpec,
     };
@@ -75,7 +84,9 @@ function resolveMappingToColor(brand, mapping) {
     ?? GLOBAL_PRIMITIVES[mapping.color]?.[mapping.index]
     ?? null;
   const opacity = normalizeOpacity(mapping.opacity);
-  const value = baseValue ? applyOpacity(baseValue, opacity) : "#FF00FF";
+  const value = baseValue
+    ? applyOpacity(baseValue, opacity)
+    : missingExportColor(`primitive "${mapping.color}[${mapping.index}]" not found`);
   // Opacity colors must stay raw to preserve alpha channel in Figma.
   const primitiveAlias = opacity === 100 ? `${mapping.color}/${mapping.index}` : null;
   return { value, primitiveAlias, gradientSpec: null };

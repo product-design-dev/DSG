@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Checkbox } from "@mantine/core";
-import { resolveColor, resolveDimension } from "../../utils/resolveToken";
+import { resolveDimension, resolveFirstColor } from "../../utils/resolveToken";
 import { COMPONENT_TOKENS } from "../../data/componentTokens";
 
 export default function CheckboxPreview({
@@ -25,11 +25,7 @@ export default function CheckboxPreview({
   const stateSuffix = state && state !== "default" ? `-${state}` : "";
   const isDisabled = state === "disabled";
 
-  const resolveFirst = (tokenKeys) => {
-    const key = tokenKeys.find((k) => tokens[k]);
-    if (!key) return "#FF00FF";
-    return resolveColor(brands, brandId, tokens[key]?.semantic, "light", key);
-  };
+  const resolveFirst = (tokenKeys) => resolveFirstColor(tokens, brands, brandId, tokenKeys);
 
   const uncheckedBg = resolveFirst([
     `${prefix}-background${stateSuffix}`,
@@ -76,6 +72,7 @@ export default function CheckboxPreview({
   const labelFontSize = resolveDimension(brands, brandId, "checkbox-label-font-size", size);
   const labelFontFamily = resolveDimension(brands, brandId, "checkbox-label-font-family");
   const labelFontWeight = resolveDimension(brands, brandId, "checkbox-label-font-weight");
+  const labelGap = resolveDimension(brands, brandId, "checkbox-label-gap", size);
   const isActive = checked || indeterminate;
   const bg = isDisabled ? disabledBg : isActive ? checkedBg : uncheckedBg;
   const bd = isDisabled ? disabledBorderColor : isActive ? checkedBorderColor : borderColor;
@@ -100,6 +97,10 @@ export default function CheckboxPreview({
       styles={{
         root: {
           opacity: 1,
+        },
+        body: {
+          alignItems: "center",
+          gap: labelGap != null ? `${labelGap}px` : undefined,
         },
         input: {
           backgroundColor: bg,

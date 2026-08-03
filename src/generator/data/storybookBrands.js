@@ -55,279 +55,252 @@ export const GLOBAL_PRIMITIVES = {
 };
 
 export const STORYBOOK_BRANDS = {
-  "theia": {
-    "name": "Theia",
-    "primitives": {
-      "blue": [
-        "#E5F0FB",
-        "#CCE2F7",
-        "#B2D3F3",
-        "#66A7E7",
-        "#3389DF",
-        "#006CD7",
-        "#0056AC",
-        "#004181",
-        "#002B56",
-        "#002041"
-      ],
-      "red": [
-        "#FEEEED",
-        "#FDDDDB",
-        "#FCBAB6",
-        "#FA9892",
-        "#F9756D",
-        "#F75349",
-        "#CA433B",
-        "#9D332C",
-        "#71221E",
-        "#5A1A17"
-      ],
-      "green": [
-        "#E8FAF0",
-        "#D5FAE8",
-        "#A4E9C4",
-        "#77DEA6",
-        "#49D389",
-        "#1CC86B",
-        "#16A056",
-        "#117840",
-        "#0B502B",
-        "#083C20"
-      ],
-      "yellow": [
-        "#FFFAEF",
-        "#FFF5DE",
-        "#FFECBE",
-        "#FFE29D",
-        "#FFD97D",
-        "#FFCF5C",
-        "#D6AD4A",
-        "#AD8B37",
-        "#856825",
-        "#70571C"
-      ],
-      "steel": [
-        "#E7EAF2",
-        "#B7C2D9",
-        "#95A3C5",
-        "#7B88B6",
-        "#6972A7",
-        "#5D6398",
-        "#50537D",
-        "#393C56",
-        "#24263C",
-        "#181926"
-      ]
+  "agentics": {
+    "name": "Agentics",
+    "gradients": {
+      "hero-cta": {
+        "type": "radial",
+        "angle": 135,
+        "stops": [
+          {
+            "color": "navy",
+            "index": 3,
+            "opacity": 100,
+            "position": 0
+          },
+          {
+            "color": "navy",
+            "index": 1,
+            "opacity": 100,
+            "position": 100
+          },
+          {
+            "color": "navy",
+            "index": 2,
+            "opacity": 100,
+            "position": 100
+          },
+          {
+            "color": "slate-purple",
+            "index": 2,
+            "opacity": 100,
+            "position": 100
+          },
+          {
+            "color": "slate-purple",
+            "index": 8,
+            "opacity": 100,
+            "position": 100
+          }
+        ]
+      }
     },
+    "primitives": {},
     "semanticMap": {
+      "text-subtle": {
+        "color": "slate-gray",
+        "index": 3
+      },
       "transparent": {
         "color": "transparent",
         "index": 0
       },
-      "interactive-primary": {
-        "color": "blue",
-        "index": 5
+      "border-focus": {
+        "color": "navy",
+        "index": 4
       },
-      "interactive-primary-hover": {
-        "color": "blue",
-        "index": 6
-      },
-      "interactive-primary-pressed": {
-        "color": "blue",
+      "text-default": {
+        "color": "neutral",
         "index": 7
       },
-      "interactive-secondary": {
+      "text-inverse": {
         "color": "neutral",
-        "index": 1
+        "index": 0
       },
-      "interactive-secondary-hover": {
+      "border-subtle": {
         "color": "neutral",
         "index": 2
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 5
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 3
+      },
+      "border-primary": {
+        "color": "slate-gray",
+        "index": 6
+      },
+      "feedback-error": {
+        "color": "navy",
+        "index": 7
+      },
+      "subtle-primary": {
+        "color": "slate-purple",
+        "index": 1
+      },
+      "border-disabled": {
+        "color": "neutral",
+        "index": 4
+      },
+      "surface-default": {
+        "color": "neutral",
+        "index": 0
+      },
+      "surface-inverse": {
+        "color": "neutral",
+        "index": 8
+      },
+      "surface-primary": {
+        "color": "slate-gray",
+        "index": 9
+      },
+      "feedback-success": {
+        "color": "slate-gray",
+        "index": 4
+      },
+      "feedback-warning": {
+        "color": "navy",
+        "index": 4
+      },
+      "subtle-secondary": {
+        "color": "slate-gray",
+        "index": 1
+      },
+      "text-placeholder": {
+        "color": "neutral",
+        "index": 5
+      },
+      "surface-secondary": {
+        "color": "slate-gray",
+        "index": 8
+      },
+      "interactive-primary": {
+        "color": "navy",
+        "index": 5
       },
       "text-on-interactive": {
         "color": "neutral",
         "index": 0
       },
-      "text-default": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-subtle": {
-        "color": "slate-gray",
-        "index": 3
-      },
-      "surface-primary": {
-        "color": "steel",
-        "index": 9
-      },
-      "surface-secondary": {
-        "color": "steel",
-        "index": 8
-      },
-      "subtle-primary": {
-        "color": "steel",
-        "index": 9
-      },
-      "subtle-secondary": {
-        "color": "steel",
-        "index": 8
-      },
-      "border-primary": {
-        "color": "steel",
-        "index": 7
-      },
-      "surface-default": {
-        "color": "neutral",
-        "index": 0
-      },
-      "border-default": {
-        "color": "neutral",
-        "index": 3
-      },
-      "border-subtle": {
-        "color": "neutral",
-        "index": 2
-      },
-      "feedback-error": {
-        "color": "red",
-        "index": 5
-      },
-      "feedback-success": {
-        "color": "green",
-        "index": 5
-      },
-      "feedback-warning": {
-        "color": "yellow",
-        "index": 5
-      },
       "interactive-disabled": {
         "color": "neutral",
         "index": 3
       },
-      "text-disabled": {
-        "color": "neutral",
-        "index": 5
-      },
-      "border-disabled": {
-        "color": "neutral",
-        "index": 4
-      },
-      "border-focus": {
-        "color": "blue",
-        "index": 4
-      },
-      "surface-inverse": {
-        "color": "neutral",
-        "index": 8
-      },
-      "text-inverse": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-placeholder": {
-        "color": "neutral",
-        "index": 5
-      }
-    },
-    "darkSemanticOverrides": {
       "interactive-secondary": {
-        "color": "neutral",
-        "index": 8
-      },
-      "interactive-secondary-hover": {
-        "color": "neutral",
-        "index": 7
-      },
-      "text-default": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-subtle": {
-        "color": "slate-gray",
-        "index": 3
-      },
-      "surface-primary": {
-        "color": "steel",
-        "index": 9
-      },
-      "surface-secondary": {
-        "color": "steel",
-        "index": 8
-      },
-      "subtle-primary": {
-        "color": "steel",
-        "index": 9
-      },
-      "subtle-secondary": {
-        "color": "steel",
-        "index": 8
-      },
-      "border-primary": {
-        "color": "steel",
-        "index": 7
-      },
-      "surface-default": {
-        "color": "neutral",
-        "index": 9
-      },
-      "border-default": {
-        "color": "neutral",
-        "index": 6
-      },
-      "border-subtle": {
-        "color": "neutral",
-        "index": 7
-      },
-      "interactive-disabled": {
-        "color": "neutral",
-        "index": 7
-      },
-      "text-disabled": {
-        "color": "neutral",
-        "index": 6
-      },
-      "border-disabled": {
-        "color": "neutral",
-        "index": 6
-      },
-      "surface-inverse": {
         "color": "neutral",
         "index": 1
       },
-      "text-inverse": {
-        "color": "neutral",
-        "index": 9
-      },
-      "text-placeholder": {
-        "color": "neutral",
-        "index": 5
-      },
-      "feedback-warning": {
-        "color": "yellow",
+      "interactive-primary-hover": {
+        "color": "navy",
         "index": 6
+      },
+      "interactive-primary-pressed": {
+        "color": "navy",
+        "index": 7
+      },
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 2
+      }
+    },
+    "componentDefaults": {
+      "pill-gap-default": "default",
+      "radio-size-default": "sm",
+      "card-radius-default": "default",
+      "chip-height-default": "sm",
+      "chip-radius-default": "sm",
+      "pill-radius-default": "default",
+      "tabs-radius-default": "sm",
+      "badge-radius-default": "default",
+      "card-padding-default": "default",
+      "chip-padding-default": "sm",
+      "chip-spacing-default": "sm",
+      "switch-width-default": "md",
+      "checkbox-size-default": "md",
+      "switch-height-default": "md",
+      "chip-font-size-default": "sm",
+      "chip-icon-size-default": "sm",
+      "pill-font-size-default": "default",
+      "pill-padding-x-default": "default",
+      "pill-padding-y-default": "default",
+      "text-font-size-default": "sm",
+      "actionicon-size-default": "sm",
+      "badge-font-size-default": "default",
+      "badge-padding-x-default": "default",
+      "badge-padding-y-default": "default",
+      "checkbox-radius-default": "md",
+      "radio-icon-size-default": "sm",
+      "radio-label-gap-default": "sm",
+      "textinput-panel-default": "default",
+      "button-font-size-default": "sm",
+      "button-icon-size-default": "sm",
+      "button-padding-x-default": "sm",
+      "button-padding-y-default": "sm",
+      "pill-line-height-default": "default",
+      "pill-remove-size-default": "default",
+      "switch-label-gap-default": "md",
+      "text-line-height-default": "sm",
+      "textinput-height-default": "sm",
+      "textinput-radius-default": "sm",
+      "actionicon-radius-default": "sm",
+      "badge-line-height-default": "default",
+      "switch-thumb-size-default": "md",
+      "button-line-height-default": "sm",
+      "checkbox-icon-size-default": "md",
+      "checkbox-label-gap-default": "md",
+      "textinput-icon-gap-default": "sm",
+      "textinput-font-size-default": "sm",
+      "textinput-icon-size-default": "sm",
+      "textinput-label-gap-default": "sm",
+      "textinput-padding-x-default": "sm",
+      "textinput-padding-y-default": "sm",
+      "actionicon-icon-size-default": "sm",
+      "chip-checked-padding-default": "sm",
+      "switch-border-radius-default": "md",
+      "radio-label-font-size-default": "sm",
+      "textinput-line-height-default": "sm",
+      "checkbox-border-radius-default": "md",
+      "switch-label-font-size-default": "md",
+      "textinput-section-size-default": "sm",
+      "radio-label-line-height-default": "sm",
+      "button-icon-stroke-width-default": "sm",
+      "checkbox-label-font-size-default": "md",
+      "switch-label-line-height-default": "md",
+      "textinput-label-font-size-default": "sm",
+      "checkbox-icon-stroke-width-default": "md",
+      "checkbox-label-line-height-default": "md",
+      "actionicon-focus-ring-width-default": "sm",
+      "actionicon-focus-ring-radius-default": "sm",
+      "actionicon-focus-ring-spacing-default": "sm"
+    },
+    "previewBackground": {
+      "dark": {
+        "color": "neutral",
+        "index": 8
+      },
+      "light": {
+        "color": "neutral",
+        "index": 1
       }
     },
     "semanticRadiusMap": {
-      "radius/none": {
-        "value": 0
-      },
-      "radius/default": {
-        "value": 4
-      },
-      "radius/xs": {
-        "value": 2
-      },
-      "radius/sm": {
-        "value": 4
+      "radius/lg": {
+        "value": 8
       },
       "radius/md": {
         "value": 6
       },
-      "radius/lg": {
-        "value": 8
+      "radius/sm": {
+        "value": 4
       },
       "radius/xl": {
         "value": 12
+      },
+      "radius/xs": {
+        "value": 2
       },
       "radius/2xl": {
         "value": 16
@@ -335,8 +308,133 @@ export const STORYBOOK_BRANDS = {
       "radius/3xl": {
         "value": 24
       },
+      "radius/none": {
+        "value": 0
+      },
+      "radius/default": {
+        "value": 4
+      },
       "radius/rounded": {
         "value": 999
+      }
+    },
+    "componentOverrides": {
+      "switch-track-background": {
+        "color": "neutral",
+        "index": 7
+      },
+      "button-filled-background": {
+        "opacity": 100,
+        "gradient": "hero-cta"
+      }
+    },
+    "dimensionOverrides": {
+      "card-shadow-blur": {
+        "_value": 0
+      },
+      "card-shadow-alpha": {
+        "_value": 0
+      },
+      "card-shadow-offset-y": {
+        "_value": 0
+      }
+    },
+    "semanticSpacingMap": {
+      "spacing/lg": {
+        "value": 16
+      },
+      "spacing/md": {
+        "value": 12
+      },
+      "spacing/sm": {
+        "value": 8
+      },
+      "spacing/xl": {
+        "value": 20
+      },
+      "spacing/xs": {
+        "value": 4
+      },
+      "spacing/2xl": {
+        "value": 24
+      }
+    },
+    "darkSemanticOverrides": {
+      "text-subtle": {
+        "color": "slate-gray",
+        "index": 3
+      },
+      "text-default": {
+        "color": "neutral",
+        "index": 0
+      },
+      "text-inverse": {
+        "color": "neutral",
+        "index": 9
+      },
+      "border-subtle": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-primary": {
+        "color": "slate-gray",
+        "index": 7
+      },
+      "subtle-primary": {
+        "color": "slate-purple",
+        "index": 1
+      },
+      "border-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "surface-default": {
+        "color": "neutral",
+        "index": 9
+      },
+      "surface-inverse": {
+        "color": "neutral",
+        "index": 1
+      },
+      "surface-primary": {
+        "color": "slate-gray",
+        "index": 9
+      },
+      "feedback-warning": {
+        "color": "navy",
+        "index": 4
+      },
+      "subtle-secondary": {
+        "color": "slate-gray",
+        "index": 8
+      },
+      "text-placeholder": {
+        "color": "neutral",
+        "index": 5
+      },
+      "surface-secondary": {
+        "color": "slate-gray",
+        "index": 8
+      },
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 7
+      },
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 7
       }
     },
     "semanticTypographyMap": {
@@ -358,8 +456,461 @@ export const STORYBOOK_BRANDS = {
       "typography/h6": {
         "value": 12
       },
+      "typography/bodyLg": {
+        "value": 14
+      },
+      "typography/bodyMd": {
+        "value": 12
+      },
+      "typography/bodySm": {
+        "value": 10
+      },
       "typography/bodyXl": {
         "value": 16
+      },
+      "typography/bodyXs": {
+        "value": 8
+      },
+      "typography/font-family": {
+        "value": "Inter"
+      }
+    },
+    "componentOverridesDark": {
+      "button-filled-background": {
+        "opacity": 100,
+        "gradient": "hero-cta"
+      }
+    }
+  },
+  "theia": {
+    "name": "Theia",
+    "gradients": {},
+    "primitives": {
+      "red": [
+        "#FEEEED",
+        "#FDDDDB",
+        "#FCBAB6",
+        "#FA9892",
+        "#F9756D",
+        "#F75349",
+        "#CA433B",
+        "#9D332C",
+        "#71221E",
+        "#5A1A17"
+      ],
+      "blue": [
+        "#E5F0FB",
+        "#CCE2F7",
+        "#B2D3F3",
+        "#66A7E7",
+        "#3389DF",
+        "#006CD7",
+        "#0056AC",
+        "#004181",
+        "#002B56",
+        "#002041"
+      ],
+      "green": [
+        "#E8FAF0",
+        "#D5FAE8",
+        "#A4E9C4",
+        "#77DEA6",
+        "#49D389",
+        "#1CC86B",
+        "#16A056",
+        "#117840",
+        "#0B502B",
+        "#083C20"
+      ],
+      "steel": [
+        "#E7EAF2",
+        "#B7C2D9",
+        "#95A3C5",
+        "#7B88B6",
+        "#6972A7",
+        "#5D6398",
+        "#50537D",
+        "#393C56",
+        "#24263C",
+        "#181926"
+      ],
+      "yellow": [
+        "#FFFAEF",
+        "#FFF5DE",
+        "#FFECBE",
+        "#FFE29D",
+        "#FFD97D",
+        "#FFCF5C",
+        "#D6AD4A",
+        "#AD8B37",
+        "#856825",
+        "#70571C"
+      ]
+    },
+    "semanticMap": {
+      "text-subtle": {
+        "color": "slate-gray",
+        "index": 3
+      },
+      "transparent": {
+        "color": "transparent",
+        "index": 0
+      },
+      "border-focus": {
+        "color": "blue",
+        "index": 4
+      },
+      "text-default": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-inverse": {
+        "color": "neutral",
+        "index": 0
+      },
+      "border-subtle": {
+        "color": "neutral",
+        "index": 2
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 5
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 3
+      },
+      "border-primary": {
+        "color": "steel",
+        "index": 7
+      },
+      "feedback-error": {
+        "color": "red",
+        "index": 5
+      },
+      "subtle-primary": {
+        "color": "steel",
+        "index": 9
+      },
+      "border-disabled": {
+        "color": "neutral",
+        "index": 4
+      },
+      "surface-default": {
+        "color": "neutral",
+        "index": 0
+      },
+      "surface-inverse": {
+        "color": "neutral",
+        "index": 8
+      },
+      "surface-primary": {
+        "color": "steel",
+        "index": 9
+      },
+      "feedback-success": {
+        "color": "green",
+        "index": 5
+      },
+      "feedback-warning": {
+        "color": "yellow",
+        "index": 5
+      },
+      "subtle-secondary": {
+        "color": "steel",
+        "index": 8
+      },
+      "text-placeholder": {
+        "color": "neutral",
+        "index": 5
+      },
+      "surface-secondary": {
+        "color": "steel",
+        "index": 8
+      },
+      "interactive-primary": {
+        "color": "blue",
+        "index": 5
+      },
+      "text-on-interactive": {
+        "color": "neutral",
+        "index": 0
+      },
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 3
+      },
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 1
+      },
+      "interactive-primary-hover": {
+        "color": "blue",
+        "index": 6
+      },
+      "interactive-primary-pressed": {
+        "color": "blue",
+        "index": 7
+      },
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 2
+      }
+    },
+    "componentDefaults": {
+      "pill-gap-default": "default",
+      "radio-size-default": "sm",
+      "avatar-size-default": "md",
+      "card-radius-default": "default",
+      "chip-height-default": "sm",
+      "chip-radius-default": "sm",
+      "loader-size-default": "md",
+      "pill-radius-default": "default",
+      "tabs-radius-default": "sm",
+      "badge-radius-default": "default",
+      "card-padding-default": "default",
+      "chip-padding-default": "sm",
+      "chip-spacing-default": "sm",
+      "switch-width-default": "md",
+      "avatar-radius-default": "md",
+      "checkbox-size-default": "md",
+      "switch-height-default": "md",
+      "chip-font-size-default": "sm",
+      "chip-icon-size-default": "sm",
+      "chip-padding-x-default": "sm",
+      "chip-padding-y-default": "sm",
+      "pill-font-size-default": "default",
+      "pill-padding-x-default": "default",
+      "pill-padding-y-default": "default",
+      "text-font-size-default": "sm",
+      "actionicon-size-default": "sm",
+      "badge-font-size-default": "default",
+      "badge-padding-x-default": "default",
+      "badge-padding-y-default": "default",
+      "checkbox-radius-default": "md",
+      "progress-height-default": "md",
+      "progress-radius-default": "md",
+      "radio-icon-size-default": "sm",
+      "radio-label-gap-default": "sm",
+      "textinput-panel-default": "default",
+      "button-font-size-default": "sm",
+      "button-icon-size-default": "sm",
+      "button-padding-x-default": "sm",
+      "button-padding-y-default": "sm",
+      "pill-line-height-default": "default",
+      "pill-remove-size-default": "default",
+      "switch-label-gap-default": "md",
+      "text-line-height-default": "sm",
+      "textinput-height-default": "sm",
+      "textinput-radius-default": "sm",
+      "actionicon-radius-default": "sm",
+      "badge-line-height-default": "default",
+      "switch-thumb-size-default": "md",
+      "tabs-pills-radius-default": "sm",
+      "button-line-height-default": "sm",
+      "checkbox-icon-size-default": "md",
+      "checkbox-label-gap-default": "md",
+      "textinput-icon-gap-default": "sm",
+      "button-icon-spacing-default": "sm",
+      "loader-stroke-width-default": "md",
+      "tabs-default-radius-default": "sm",
+      "textinput-font-size-default": "sm",
+      "textinput-icon-size-default": "sm",
+      "textinput-label-gap-default": "sm",
+      "textinput-padding-x-default": "sm",
+      "textinput-padding-y-default": "sm",
+      "actionicon-icon-size-default": "sm",
+      "chip-checked-padding-default": "sm",
+      "switch-border-radius-default": "md",
+      "tabs-outlined-radius-default": "sm",
+      "radio-label-font-size-default": "sm",
+      "textinput-line-height-default": "sm",
+      "checkbox-border-radius-default": "md",
+      "chip-checked-padding-x-default": "sm",
+      "chip-checked-padding-y-default": "sm",
+      "switch-label-font-size-default": "md",
+      "textinput-section-size-default": "sm",
+      "radio-label-line-height-default": "sm",
+      "button-icon-stroke-width-default": "sm",
+      "checkbox-label-font-size-default": "md",
+      "switch-label-line-height-default": "md",
+      "loader-oval-corner-radius-default": "md",
+      "textinput-label-font-size-default": "sm",
+      "checkbox-icon-stroke-width-default": "md",
+      "checkbox-label-line-height-default": "md",
+      "actionicon-focus-ring-width-default": "sm",
+      "actionicon-focus-ring-radius-default": "sm",
+      "actionicon-focus-ring-spacing-default": "sm"
+    },
+    "previewBackground": {
+      "dark": {
+        "color": "neutral",
+        "index": 8
+      },
+      "light": {
+        "color": "neutral",
+        "index": 1
+      }
+    },
+    "semanticRadiusMap": {
+      "radius/lg": {
+        "value": 8
+      },
+      "radius/md": {
+        "value": 6
+      },
+      "radius/sm": {
+        "value": 4
+      },
+      "radius/xl": {
+        "value": 12
+      },
+      "radius/xs": {
+        "value": 2
+      },
+      "radius/2xl": {
+        "value": 16
+      },
+      "radius/3xl": {
+        "value": 24
+      },
+      "radius/none": {
+        "value": 0
+      },
+      "radius/default": {
+        "value": 4
+      },
+      "radius/rounded": {
+        "value": 999
+      }
+    },
+    "componentOverrides": {
+      "switch-track-background": {
+        "color": "neutral",
+        "index": 7
+      }
+    },
+    "dimensionOverrides": {
+      "button-border-radius": {
+        "_value": 4
+      }
+    },
+    "semanticSpacingMap": {
+      "spacing/lg": {
+        "value": 16
+      },
+      "spacing/md": {
+        "value": 12
+      },
+      "spacing/sm": {
+        "value": 8
+      },
+      "spacing/xl": {
+        "value": 20
+      },
+      "spacing/xs": {
+        "value": 4
+      },
+      "spacing/2xl": {
+        "value": 24
+      }
+    },
+    "darkSemanticOverrides": {
+      "text-subtle": {
+        "color": "slate-gray",
+        "index": 3
+      },
+      "text-default": {
+        "color": "neutral",
+        "index": 0
+      },
+      "text-inverse": {
+        "color": "neutral",
+        "index": 9
+      },
+      "border-subtle": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-primary": {
+        "color": "steel",
+        "index": 7
+      },
+      "subtle-primary": {
+        "color": "steel",
+        "index": 9
+      },
+      "border-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "surface-default": {
+        "color": "neutral",
+        "index": 9
+      },
+      "surface-inverse": {
+        "color": "neutral",
+        "index": 1
+      },
+      "surface-primary": {
+        "color": "steel",
+        "index": 9
+      },
+      "feedback-warning": {
+        "color": "yellow",
+        "index": 6
+      },
+      "subtle-secondary": {
+        "color": "steel",
+        "index": 8
+      },
+      "text-placeholder": {
+        "color": "neutral",
+        "index": 5
+      },
+      "surface-secondary": {
+        "color": "steel",
+        "index": 8
+      },
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 7
+      },
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 7
+      }
+    },
+    "semanticTypographyMap": {
+      "typography/h1": {
+        "value": 24
+      },
+      "typography/h2": {
+        "value": 20
+      },
+      "typography/h3": {
+        "value": 18
+      },
+      "typography/h4": {
+        "value": 16
+      },
+      "typography/h5": {
+        "value": 14
+      },
+      "typography/h6": {
+        "value": 12
       },
       "typography/bodyLg": {
         "value": 14
@@ -370,6 +921,9 @@ export const STORYBOOK_BRANDS = {
       "typography/bodySm": {
         "value": 10
       },
+      "typography/bodyXl": {
+        "value": 16
+      },
       "typography/bodyXs": {
         "value": 8
       },
@@ -377,147 +931,451 @@ export const STORYBOOK_BRANDS = {
         "value": "Inter"
       }
     },
-    "semanticSpacingMap": {
-      "spacing/xs": {
+    "componentOverridesDark": {
+      "switch-thumb-background": {
+        "color": "neutral",
+        "index": 0
+      }
+    }
+  },
+  "brand-1": {
+    "name": "Brand 1",
+    "gradients": {},
+    "primitives": {
+      "orange": [
+        "#FDF4E7",
+        "#FBE1BC",
+        "#FACD8F",
+        "#FABA61",
+        "#FCA831",
+        "#FF9500",
+        "#C67503",
+        "#8F5604",
+        "#5A3604",
+        "#261702"
+      ]
+    },
+    "semanticMap": {
+      "text-subtle": {
+        "color": "neutral",
+        "index": 4
+      },
+      "transparent": {
+        "color": "transparent",
+        "index": 0
+      },
+      "border-focus": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-default": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-inverse": {
+        "color": "neutral",
+        "index": 0
+      },
+      "border-subtle": {
+        "color": "neutral",
+        "index": 2
+      },
+      "feedback-info": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 5
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 3
+      },
+      "border-primary": {
+        "color": "neutral",
+        "index": 6
+      },
+      "feedback-error": {
+        "color": "neutral",
+        "index": 8
+      },
+      "subtle-primary": {
+        "color": "neutral",
+        "index": 1
+      },
+      "border-disabled": {
+        "color": "neutral",
+        "index": 4
+      },
+      "surface-default": {
+        "color": "neutral",
+        "index": 0
+      },
+      "surface-inverse": {
+        "color": "neutral",
+        "index": 8
+      },
+      "surface-primary": {
+        "color": "neutral",
+        "index": 9
+      },
+      "feedback-success": {
+        "color": "neutral",
+        "index": 5
+      },
+      "feedback-warning": {
+        "color": "neutral",
+        "index": 6
+      },
+      "subtle-secondary": {
+        "color": "neutral",
+        "index": 2
+      },
+      "text-placeholder": {
+        "color": "neutral",
+        "index": 5
+      },
+      "surface-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-primary": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-on-interactive": {
+        "color": "neutral",
+        "index": 0
+      },
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 3
+      },
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 1
+      },
+      "interactive-primary-hover": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-primary-pressed": {
+        "color": "neutral",
+        "index": 9
+      },
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 2
+      }
+    },
+    "componentDefaults": {
+      "pill-gap-default": "default",
+      "radio-size-default": "sm",
+      "avatar-size-default": "md",
+      "card-radius-default": "default",
+      "chip-height-default": "sm",
+      "chip-radius-default": "sm",
+      "loader-size-default": "md",
+      "pill-radius-default": "default",
+      "badge-radius-default": "default",
+      "card-padding-default": "default",
+      "chip-spacing-default": "sm",
+      "switch-width-default": "md",
+      "avatar-radius-default": "md",
+      "checkbox-size-default": "md",
+      "switch-height-default": "md",
+      "chip-font-size-default": "sm",
+      "chip-icon-size-default": "sm",
+      "chip-padding-x-default": "sm",
+      "chip-padding-y-default": "sm",
+      "pill-font-size-default": "default",
+      "pill-padding-x-default": "default",
+      "pill-padding-y-default": "default",
+      "text-font-size-default": "sm",
+      "actionicon-size-default": "sm",
+      "badge-font-size-default": "default",
+      "badge-padding-x-default": "default",
+      "badge-padding-y-default": "default",
+      "checkbox-radius-default": "md",
+      "progress-height-default": "md",
+      "progress-radius-default": "md",
+      "radio-icon-size-default": "sm",
+      "radio-label-gap-default": "sm",
+      "textinput-panel-default": "default",
+      "button-font-size-default": "sm",
+      "button-icon-size-default": "sm",
+      "button-padding-x-default": "sm",
+      "button-padding-y-default": "sm",
+      "pill-line-height-default": "default",
+      "pill-remove-size-default": "default",
+      "switch-label-gap-default": "md",
+      "text-line-height-default": "sm",
+      "textinput-height-default": "sm",
+      "textinput-radius-default": "sm",
+      "actionicon-radius-default": "sm",
+      "badge-line-height-default": "default",
+      "switch-thumb-size-default": "md",
+      "tabs-pills-radius-default": "sm",
+      "button-line-height-default": "sm",
+      "checkbox-icon-size-default": "md",
+      "checkbox-label-gap-default": "md",
+      "textinput-icon-gap-default": "sm",
+      "button-icon-spacing-default": "sm",
+      "loader-stroke-width-default": "md",
+      "tabs-default-radius-default": "sm",
+      "textinput-font-size-default": "sm",
+      "textinput-icon-size-default": "sm",
+      "textinput-label-gap-default": "sm",
+      "textinput-padding-x-default": "sm",
+      "textinput-padding-y-default": "sm",
+      "actionicon-icon-size-default": "sm",
+      "switch-border-radius-default": "md",
+      "tabs-outlined-radius-default": "sm",
+      "radio-label-font-size-default": "sm",
+      "textinput-line-height-default": "sm",
+      "checkbox-border-radius-default": "md",
+      "chip-checked-padding-x-default": "sm",
+      "chip-checked-padding-y-default": "sm",
+      "switch-label-font-size-default": "md",
+      "textinput-section-size-default": "sm",
+      "radio-label-line-height-default": "sm",
+      "button-icon-stroke-width-default": "sm",
+      "checkbox-label-font-size-default": "md",
+      "switch-label-line-height-default": "md",
+      "loader-oval-corner-radius-default": "md",
+      "textinput-label-font-size-default": "sm",
+      "checkbox-icon-stroke-width-default": "md",
+      "checkbox-label-line-height-default": "md",
+      "actionicon-focus-ring-width-default": "sm",
+      "actionicon-focus-ring-radius-default": "sm",
+      "actionicon-focus-ring-spacing-default": "sm"
+    },
+    "previewBackground": {
+      "dark": {
+        "color": "neutral",
+        "index": 8
+      },
+      "light": {
+        "color": "neutral",
+        "index": 1
+      }
+    },
+    "semanticRadiusMap": {
+      "radius/lg": {
+        "value": 8
+      },
+      "radius/md": {
+        "value": 6
+      },
+      "radius/sm": {
         "value": 4
       },
-      "spacing/sm": {
-        "value": 8
+      "radius/xl": {
+        "value": 12
+      },
+      "radius/xs": {
+        "value": 2
+      },
+      "radius/2xl": {
+        "value": 16
+      },
+      "radius/3xl": {
+        "value": 24
+      },
+      "radius/none": {
+        "value": 0
+      },
+      "radius/default": {
+        "value": 4
+      },
+      "radius/rounded": {
+        "value": 999
+      }
+    },
+    "componentOverrides": {
+      "button-filled-text": {
+        "color": "neutral",
+        "index": 8
+      },
+      "switch-track-background": {
+        "color": "neutral",
+        "index": 7
+      },
+      "button-filled-background": {
+        "color": "orange",
+        "index": 5,
+        "opacity": 100
+      }
+    },
+    "dimensionOverrides": {
+      "button-border-radius": {
+        "_value": 6
+      }
+    },
+    "semanticSpacingMap": {
+      "spacing/lg": {
+        "value": 16
       },
       "spacing/md": {
         "value": 12
       },
-      "spacing/lg": {
-        "value": 16
+      "spacing/sm": {
+        "value": 8
       },
       "spacing/xl": {
         "value": 20
+      },
+      "spacing/xs": {
+        "value": 4
       },
       "spacing/2xl": {
         "value": 24
       }
     },
-    "componentDefaults": {
-      "button-padding-x-default": "sm",
-      "button-padding-y-default": "sm",
-      "button-font-size-default": "sm",
-      "button-line-height-default": "sm",
-      "button-icon-size-default": "sm",
-      "button-icon-stroke-width-default": "sm",
-      "actionicon-size-default": "sm",
-      "actionicon-icon-size-default": "sm",
-      "actionicon-radius-default": "sm",
-      "actionicon-focus-ring-width-default": "sm",
-      "actionicon-focus-ring-spacing-default": "sm",
-      "actionicon-focus-ring-radius-default": "sm",
-      "tabs-radius-default": "sm",
-      "switch-width-default": "md",
-      "switch-height-default": "md",
-      "switch-thumb-size-default": "md",
-      "switch-border-radius-default": "md",
-      "switch-label-font-size-default": "md",
-      "switch-label-line-height-default": "md",
-      "switch-label-gap-default": "md",
-      "checkbox-size-default": "md",
-      "checkbox-border-radius-default": "md",
-      "checkbox-radius-default": "md",
-      "checkbox-icon-size-default": "md",
-      "checkbox-icon-stroke-width-default": "md",
-      "checkbox-label-font-size-default": "md",
-      "checkbox-label-line-height-default": "md",
-      "checkbox-label-gap-default": "md",
-      "radio-size-default": "sm",
-      "radio-icon-size-default": "sm",
-      "radio-label-font-size-default": "sm",
-      "radio-label-line-height-default": "sm",
-      "radio-label-gap-default": "sm",
-      "chip-height-default": "sm",
-      "chip-padding-default": "sm",
-      "chip-checked-padding-default": "sm",
-      "chip-icon-size-default": "sm",
-      "chip-font-size-default": "sm",
-      "chip-radius-default": "sm",
-      "chip-spacing-default": "sm",
-      "loader-size-default": "md",
-      "loader-stroke-width-default": "md",
-      "loader-oval-corner-radius-default": "md",
-      "card-padding-default": "default",
-      "card-radius-default": "default",
-      "pill-font-size-default": "default",
-      "pill-line-height-default": "default",
-      "pill-padding-x-default": "default",
-      "pill-padding-y-default": "default",
-      "pill-radius-default": "default",
-      "pill-gap-default": "default",
-      "pill-remove-size-default": "default",
-      "badge-font-size-default": "default",
-      "badge-line-height-default": "default",
-      "badge-padding-x-default": "default",
-      "badge-padding-y-default": "default",
-      "badge-radius-default": "default",
-      "textinput-panel-default": "default",
-      "textinput-height-default": "sm",
-      "textinput-font-size-default": "sm",
-      "textinput-line-height-default": "sm",
-      "textinput-label-font-size-default": "sm",
-      "textinput-label-gap-default": "sm",
-      "textinput-icon-size-default": "sm",
-      "textinput-icon-gap-default": "sm",
-      "textinput-section-size-default": "sm",
-      "textinput-padding-x-default": "sm",
-      "textinput-padding-y-default": "sm",
-      "textinput-radius-default": "sm",
-      "text-font-size-default": "sm",
-      "text-line-height-default": "sm",
-      "button-icon-spacing-default": "sm",
-      "tabs-default-radius-default": "sm",
-      "tabs-outlined-radius-default": "sm",
-      "tabs-pills-radius-default": "sm",
-      "chip-padding-x-default": "sm",
-      "chip-padding-y-default": "sm",
-      "chip-checked-padding-x-default": "sm",
-      "chip-checked-padding-y-default": "sm",
-      "progress-height-default": "md",
-      "progress-radius-default": "md",
-      "avatar-size-default": "md",
-      "avatar-radius-default": "md"
-    },
-    "gradients": {
-      "primary-sheen": {
-        "type": "linear",
-        "angle": 135,
-        "stops": [
-          {
-            "color": "blue",
-            "index": 3,
-            "position": 0,
-            "opacity": 100
-          },
-          {
-            "color": "blue",
-            "index": 8,
-            "position": 100,
-            "opacity": 100
-          }
-        ]
+    "darkSemanticOverrides": {
+      "text-subtle": {
+        "color": "neutral",
+        "index": 4
+      },
+      "text-default": {
+        "color": "neutral",
+        "index": 0
+      },
+      "text-inverse": {
+        "color": "neutral",
+        "index": 9
+      },
+      "border-subtle": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-primary": {
+        "color": "neutral",
+        "index": 7
+      },
+      "subtle-primary": {
+        "color": "neutral",
+        "index": 1
+      },
+      "border-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "surface-default": {
+        "color": "neutral",
+        "index": 9
+      },
+      "surface-inverse": {
+        "color": "neutral",
+        "index": 1
+      },
+      "surface-primary": {
+        "color": "neutral",
+        "index": 9
+      },
+      "feedback-warning": {
+        "color": "neutral",
+        "index": 6
+      },
+      "subtle-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "text-placeholder": {
+        "color": "neutral",
+        "index": 5
+      },
+      "surface-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 7
+      },
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 7
       }
     },
-    "dimensionOverrides": {}
+    "semanticTypographyMap": {
+      "typography/h1": {
+        "value": 24
+      },
+      "typography/h2": {
+        "value": 20
+      },
+      "typography/h3": {
+        "value": 18
+      },
+      "typography/h4": {
+        "value": 16
+      },
+      "typography/h5": {
+        "value": 14
+      },
+      "typography/h6": {
+        "value": 12
+      },
+      "typography/bodyLg": {
+        "value": 14
+      },
+      "typography/bodyMd": {
+        "value": 12
+      },
+      "typography/bodySm": {
+        "value": 10
+      },
+      "typography/bodyXl": {
+        "value": 16
+      },
+      "typography/bodyXs": {
+        "value": 8
+      },
+      "typography/font-family": {
+        "value": "Inter"
+      }
+    },
+    "componentOverridesDark": {
+      "button-filled-text": {
+        "color": "neutral",
+        "index": 8
+      },
+      "button-filled-background": {
+        "color": "orange",
+        "index": 4,
+        "opacity": 100
+      }
+    }
   },
   "hyperion": {
     "name": "Hyperion",
+    "gradients": {},
     "primitives": {
-      "green": [
-        "#EFF8EF",
-        "#DEF1DF",
-        "#CBEAC9",
-        "#B2DDAF",
-        "#8ACC87",
-        "#5FB95E",
-        "#25A72C",
-        "#197B1E",
-        "#0D5211",
-        "#032603"
+      "red": [
+        "#FFEEEE",
+        "#FFDDDD",
+        "#FFBBBB",
+        "#FFAAAA",
+        "#FE8888",
+        "#FF6868",
+        "#FF4E4E",
+        "#DC3535",
+        "#A62A2A",
+        "#7F2B2B"
       ],
       "blue": [
         "#E9F3FE",
@@ -543,29 +1401,17 @@ export const STORYBOOK_BRANDS = {
         "#0F718F",
         "#004D65"
       ],
-      "purple": [
-        "#F2F3FF",
-        "#E5E6FE",
-        "#D8DAFE",
-        "#CBCEFE",
-        "#BDC1FB",
-        "#A2A8FF",
-        "#7C84FC",
-        "#7077E3",
-        "#575CB0",
-        "#3E427E"
-      ],
-      "red": [
-        "#FFEEEE",
-        "#FFDDDD",
-        "#FFBBBB",
-        "#FFAAAA",
-        "#FE8888",
-        "#FF6868",
-        "#FF4E4E",
-        "#DC3535",
-        "#A62A2A",
-        "#7F2B2B"
+      "green": [
+        "#EFF8EF",
+        "#DEF1DF",
+        "#CBEAC9",
+        "#B2DDAF",
+        "#8ACC87",
+        "#5FB95E",
+        "#25A72C",
+        "#197B1E",
+        "#0D5211",
+        "#032603"
       ],
       "orange": [
         "#FFF2E9",
@@ -578,6 +1424,18 @@ export const STORYBOOK_BRANDS = {
         "#CC621F",
         "#994917",
         "#663110"
+      ],
+      "purple": [
+        "#F2F3FF",
+        "#E5E6FE",
+        "#D8DAFE",
+        "#CBCEFE",
+        "#BDC1FB",
+        "#A2A8FF",
+        "#7C84FC",
+        "#7077E3",
+        "#575CB0",
+        "#3E427E"
       ],
       "yellow": [
         "#FFFEED",
@@ -593,81 +1451,69 @@ export const STORYBOOK_BRANDS = {
       ]
     },
     "semanticMap": {
+      "text-subtle": {
+        "color": "slate-purple",
+        "index": 6
+      },
       "transparent": {
         "color": "transparent",
         "index": 0
       },
-      "interactive-primary": {
+      "border-focus": {
         "color": "green",
-        "index": 6
-      },
-      "interactive-primary-hover": {
-        "color": "green",
-        "index": 7
-      },
-      "interactive-primary-pressed": {
-        "color": "green",
-        "index": 8
-      },
-      "interactive-secondary": {
-        "color": "neutral",
-        "index": 1
-      },
-      "interactive-secondary-hover": {
-        "color": "neutral",
-        "index": 2
-      },
-      "text-on-interactive": {
-        "color": "neutral",
-        "index": 0
+        "index": 5
       },
       "text-default": {
         "color": "slate-purple",
         "index": 9
       },
-      "text-subtle": {
-        "color": "slate-purple",
-        "index": 6
-      },
-      "surface-primary": {
-        "color": "slate-purple",
+      "text-inverse": {
+        "color": "neutral",
         "index": 0
       },
-      "surface-secondary": {
+      "border-subtle": {
         "color": "neutral",
+        "index": 2
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 5
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 3
+      },
+      "border-primary": {
+        "color": "slate-gray",
+        "index": 0
+      },
+      "feedback-error": {
+        "color": "red",
+        "index": 5
+      },
+      "primary-border": {
+        "color": "slate-gray",
         "index": 0
       },
       "subtle-primary": {
         "color": "slate-purple",
         "index": 0
       },
-      "subtle-secondary": {
+      "border-disabled": {
         "color": "neutral",
-        "index": 0
-      },
-      "border-primary": {
-        "color": "slate-gray",
-        "index": 0
-      },
-      "primary-border": {
-        "color": "slate-gray",
-        "index": 0
+        "index": 4
       },
       "surface-default": {
         "color": "neutral",
         "index": 0
       },
-      "border-default": {
+      "surface-inverse": {
         "color": "neutral",
-        "index": 3
+        "index": 8
       },
-      "border-subtle": {
-        "color": "neutral",
-        "index": 2
-      },
-      "feedback-error": {
-        "color": "red",
-        "index": 5
+      "surface-primary": {
+        "color": "slate-purple",
+        "index": 0
       },
       "feedback-success": {
         "color": "green",
@@ -677,67 +1523,225 @@ export const STORYBOOK_BRANDS = {
         "color": "orange",
         "index": 5
       },
-      "interactive-disabled": {
-        "color": "neutral",
-        "index": 3
-      },
-      "text-disabled": {
-        "color": "neutral",
-        "index": 5
-      },
-      "border-disabled": {
-        "color": "neutral",
-        "index": 4
-      },
-      "border-focus": {
-        "color": "green",
-        "index": 5
-      },
-      "surface-inverse": {
-        "color": "neutral",
-        "index": 8
-      },
-      "text-inverse": {
+      "subtle-secondary": {
         "color": "neutral",
         "index": 0
       },
       "text-placeholder": {
         "color": "neutral",
         "index": 5
-      }
-    },
-    "darkSemanticOverrides": {
-      "interactive-secondary": {
-        "color": "neutral",
-        "index": 8
-      },
-      "interactive-secondary-hover": {
-        "color": "neutral",
-        "index": 7
-      },
-      "text-default": {
-        "color": "slate-purple",
-        "index": 9
-      },
-      "text-subtle": {
-        "color": "slate-purple",
-        "index": 6
-      },
-      "surface-primary": {
-        "color": "slate-purple",
-        "index": 0
       },
       "surface-secondary": {
         "color": "neutral",
         "index": 0
       },
-      "subtle-primary": {
-        "color": "slate-purple",
-        "index": 0
+      "interactive-primary": {
+        "color": "green",
+        "index": 6
       },
-      "subtle-secondary": {
+      "text-on-interactive": {
         "color": "neutral",
         "index": 0
+      },
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 3
+      },
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 1
+      },
+      "interactive-primary-hover": {
+        "color": "green",
+        "index": 7
+      },
+      "interactive-primary-pressed": {
+        "color": "green",
+        "index": 8
+      },
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 2
+      }
+    },
+    "componentDefaults": {
+      "pill-gap-default": "default",
+      "radio-size-default": "md",
+      "avatar-size-default": "md",
+      "card-radius-default": "default",
+      "chip-height-default": "md",
+      "chip-radius-default": "md",
+      "loader-size-default": "md",
+      "pill-radius-default": "default",
+      "tabs-radius-default": "md",
+      "badge-radius-default": "default",
+      "card-padding-default": "default",
+      "chip-padding-default": "md",
+      "chip-spacing-default": "md",
+      "switch-width-default": "md",
+      "avatar-radius-default": "md",
+      "checkbox-size-default": "md",
+      "switch-height-default": "md",
+      "chip-font-size-default": "md",
+      "chip-icon-size-default": "md",
+      "chip-padding-x-default": "md",
+      "chip-padding-y-default": "md",
+      "pill-font-size-default": "default",
+      "pill-padding-x-default": "default",
+      "pill-padding-y-default": "default",
+      "text-font-size-default": "md",
+      "actionicon-size-default": "md",
+      "badge-font-size-default": "default",
+      "badge-padding-x-default": "default",
+      "badge-padding-y-default": "default",
+      "checkbox-radius-default": "md",
+      "progress-height-default": "md",
+      "progress-radius-default": "md",
+      "radio-icon-size-default": "md",
+      "radio-label-gap-default": "md",
+      "textinput-panel-default": "default",
+      "button-font-size-default": "md",
+      "button-icon-size-default": "md",
+      "button-padding-x-default": "md",
+      "button-padding-y-default": "md",
+      "pill-line-height-default": "default",
+      "pill-remove-size-default": "default",
+      "switch-label-gap-default": "md",
+      "text-line-height-default": "md",
+      "textinput-height-default": "md",
+      "textinput-radius-default": "md",
+      "actionicon-radius-default": "md",
+      "badge-line-height-default": "default",
+      "switch-thumb-size-default": "md",
+      "tabs-pills-radius-default": "md",
+      "button-line-height-default": "md",
+      "checkbox-icon-size-default": "md",
+      "checkbox-label-gap-default": "md",
+      "textinput-icon-gap-default": "md",
+      "button-icon-spacing-default": "md",
+      "loader-stroke-width-default": "md",
+      "tabs-default-radius-default": "md",
+      "textinput-font-size-default": "md",
+      "textinput-icon-size-default": "md",
+      "textinput-label-gap-default": "md",
+      "textinput-padding-x-default": "md",
+      "textinput-padding-y-default": "md",
+      "actionicon-icon-size-default": "md",
+      "chip-checked-padding-default": "md",
+      "switch-border-radius-default": "md",
+      "tabs-outlined-radius-default": "md",
+      "radio-label-font-size-default": "md",
+      "textinput-line-height-default": "md",
+      "checkbox-border-radius-default": "md",
+      "chip-checked-padding-x-default": "md",
+      "chip-checked-padding-y-default": "md",
+      "switch-label-font-size-default": "md",
+      "textinput-section-size-default": "md",
+      "radio-label-line-height-default": "md",
+      "button-icon-stroke-width-default": "md",
+      "checkbox-label-font-size-default": "md",
+      "switch-label-line-height-default": "md",
+      "loader-oval-corner-radius-default": "md",
+      "textinput-label-font-size-default": "md",
+      "checkbox-icon-stroke-width-default": "md",
+      "checkbox-label-line-height-default": "md",
+      "actionicon-focus-ring-width-default": "md",
+      "actionicon-focus-ring-radius-default": "md",
+      "actionicon-focus-ring-spacing-default": "md"
+    },
+    "previewBackground": {
+      "dark": {
+        "color": "neutral",
+        "index": 8
+      },
+      "light": {
+        "color": "neutral",
+        "index": 1
+      }
+    },
+    "semanticRadiusMap": {
+      "radius/lg": {
+        "value": 8
+      },
+      "radius/md": {
+        "value": 8
+      },
+      "radius/sm": {
+        "value": 4
+      },
+      "radius/xl": {
+        "value": 12
+      },
+      "radius/xs": {
+        "value": 2
+      },
+      "radius/2xl": {
+        "value": 16
+      },
+      "radius/3xl": {
+        "value": 24
+      },
+      "radius/none": {
+        "value": 0
+      },
+      "radius/default": {
+        "value": 6
+      },
+      "radius/rounded": {
+        "value": 999
+      }
+    },
+    "componentOverrides": {
+      "switch-track-background": {
+        "color": "neutral",
+        "index": 7
+      }
+    },
+    "dimensionOverrides": {},
+    "semanticSpacingMap": {
+      "spacing/lg": {
+        "value": 100
+      },
+      "spacing/md": {
+        "value": 75
+      },
+      "spacing/sm": {
+        "value": 50
+      },
+      "spacing/xl": {
+        "value": 150
+      },
+      "spacing/xs": {
+        "value": 25
+      },
+      "spacing/2xl": {
+        "value": 200
+      }
+    },
+    "darkSemanticOverrides": {
+      "text-subtle": {
+        "color": "slate-purple",
+        "index": 6
+      },
+      "text-default": {
+        "color": "slate-purple",
+        "index": 9
+      },
+      "text-inverse": {
+        "color": "neutral",
+        "index": 9
+      },
+      "border-subtle": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 6
       },
       "border-primary": {
         "color": "slate-gray",
@@ -747,77 +1751,53 @@ export const STORYBOOK_BRANDS = {
         "color": "slate-gray",
         "index": 0
       },
-      "surface-default": {
-        "color": "neutral",
-        "index": 9
-      },
-      "border-default": {
-        "color": "neutral",
-        "index": 6
-      },
-      "border-subtle": {
-        "color": "neutral",
-        "index": 7
-      },
-      "interactive-disabled": {
-        "color": "neutral",
-        "index": 7
-      },
-      "text-disabled": {
-        "color": "neutral",
-        "index": 6
+      "subtle-primary": {
+        "color": "slate-purple",
+        "index": 0
       },
       "border-disabled": {
         "color": "neutral",
         "index": 6
       },
+      "surface-default": {
+        "color": "neutral",
+        "index": 9
+      },
       "surface-inverse": {
         "color": "neutral",
         "index": 1
       },
-      "text-inverse": {
+      "surface-primary": {
+        "color": "slate-purple",
+        "index": 0
+      },
+      "feedback-warning": {
+        "color": "orange",
+        "index": 6
+      },
+      "subtle-secondary": {
         "color": "neutral",
-        "index": 9
+        "index": 0
       },
       "text-placeholder": {
         "color": "neutral",
         "index": 5
       },
-      "feedback-warning": {
-        "color": "orange",
-        "index": 6
-      }
-    },
-    "semanticRadiusMap": {
-      "radius/none": {
-        "value": 0
+      "surface-secondary": {
+        "color": "neutral",
+        "index": 0
       },
-      "radius/default": {
-        "value": 6
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 7
       },
-      "radius/xs": {
-        "value": 2
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 8
       },
-      "radius/sm": {
-        "value": 4
-      },
-      "radius/md": {
-        "value": 8
-      },
-      "radius/lg": {
-        "value": 8
-      },
-      "radius/xl": {
-        "value": 12
-      },
-      "radius/2xl": {
-        "value": 16
-      },
-      "radius/3xl": {
-        "value": 24
-      },
-      "radius/rounded": {
-        "value": 999
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 7
       }
     },
     "semanticTypographyMap": {
@@ -839,9 +1819,6 @@ export const STORYBOOK_BRANDS = {
       "typography/h6": {
         "value": 20
       },
-      "typography/bodyXl": {
-        "value": 18
-      },
       "typography/bodyLg": {
         "value": 16
       },
@@ -851,536 +1828,20 @@ export const STORYBOOK_BRANDS = {
       "typography/bodySm": {
         "value": 13
       },
-      "typography/bodyXs": {
-        "value": 12
-      },
-      "typography/font-family": {
-        "value": "Inter"
-      }
-    },
-    "semanticSpacingMap": {
-      "spacing/xs": {
-        "value": 25
-      },
-      "spacing/sm": {
-        "value": 50
-      },
-      "spacing/md": {
-        "value": 75
-      },
-      "spacing/lg": {
-        "value": 100
-      },
-      "spacing/xl": {
-        "value": 150
-      },
-      "spacing/2xl": {
-        "value": 200
-      }
-    },
-    "componentDefaults": {
-      "button-padding-x-default": "md",
-      "button-padding-y-default": "md",
-      "button-font-size-default": "md",
-      "button-line-height-default": "md",
-      "button-icon-size-default": "md",
-      "button-icon-stroke-width-default": "md",
-      "actionicon-size-default": "md",
-      "actionicon-icon-size-default": "md",
-      "actionicon-radius-default": "md",
-      "actionicon-focus-ring-width-default": "md",
-      "actionicon-focus-ring-spacing-default": "md",
-      "actionicon-focus-ring-radius-default": "md",
-      "tabs-radius-default": "md",
-      "switch-width-default": "md",
-      "switch-height-default": "md",
-      "switch-thumb-size-default": "md",
-      "switch-border-radius-default": "md",
-      "switch-label-font-size-default": "md",
-      "switch-label-line-height-default": "md",
-      "switch-label-gap-default": "md",
-      "checkbox-size-default": "md",
-      "checkbox-border-radius-default": "md",
-      "checkbox-radius-default": "md",
-      "checkbox-icon-size-default": "md",
-      "checkbox-icon-stroke-width-default": "md",
-      "checkbox-label-font-size-default": "md",
-      "checkbox-label-line-height-default": "md",
-      "checkbox-label-gap-default": "md",
-      "radio-size-default": "md",
-      "radio-icon-size-default": "md",
-      "radio-label-font-size-default": "md",
-      "radio-label-line-height-default": "md",
-      "radio-label-gap-default": "md",
-      "chip-height-default": "md",
-      "chip-padding-default": "md",
-      "chip-checked-padding-default": "md",
-      "chip-icon-size-default": "md",
-      "chip-font-size-default": "md",
-      "chip-radius-default": "md",
-      "chip-spacing-default": "md",
-      "loader-size-default": "md",
-      "loader-stroke-width-default": "md",
-      "loader-oval-corner-radius-default": "md",
-      "card-padding-default": "default",
-      "card-radius-default": "default",
-      "pill-font-size-default": "default",
-      "pill-line-height-default": "default",
-      "pill-padding-x-default": "default",
-      "pill-padding-y-default": "default",
-      "pill-radius-default": "default",
-      "pill-gap-default": "default",
-      "pill-remove-size-default": "default",
-      "badge-font-size-default": "default",
-      "badge-line-height-default": "default",
-      "badge-padding-x-default": "default",
-      "badge-padding-y-default": "default",
-      "badge-radius-default": "default",
-      "textinput-panel-default": "default",
-      "textinput-height-default": "md",
-      "textinput-font-size-default": "md",
-      "textinput-line-height-default": "md",
-      "textinput-label-font-size-default": "md",
-      "textinput-label-gap-default": "md",
-      "textinput-icon-size-default": "md",
-      "textinput-icon-gap-default": "md",
-      "textinput-section-size-default": "md",
-      "textinput-padding-x-default": "md",
-      "textinput-padding-y-default": "md",
-      "textinput-radius-default": "md",
-      "text-font-size-default": "md",
-      "text-line-height-default": "md",
-      "button-icon-spacing-default": "md",
-      "tabs-default-radius-default": "md",
-      "tabs-outlined-radius-default": "md",
-      "tabs-pills-radius-default": "md",
-      "chip-padding-x-default": "md",
-      "chip-padding-y-default": "md",
-      "chip-checked-padding-x-default": "md",
-      "chip-checked-padding-y-default": "md",
-      "progress-height-default": "md",
-      "progress-radius-default": "md",
-      "avatar-size-default": "md",
-      "avatar-radius-default": "md"
-    },
-    "gradients": {},
-    "dimensionOverrides": {}
-  },
-  "agentics": {
-    "name": "Agentics",
-    "primitives": {},
-    "semanticMap": {
-      "transparent": {
-        "color": "transparent",
-        "index": 0
-      },
-      "interactive-primary": {
-        "color": "navy",
-        "index": 5
-      },
-      "interactive-primary-hover": {
-        "color": "navy",
-        "index": 6
-      },
-      "interactive-primary-pressed": {
-        "color": "navy",
-        "index": 7
-      },
-      "interactive-secondary": {
-        "color": "neutral",
-        "index": 1
-      },
-      "interactive-secondary-hover": {
-        "color": "neutral",
-        "index": 2
-      },
-      "text-on-interactive": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-default": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-subtle": {
-        "color": "slate-gray",
-        "index": 3
-      },
-      "surface-primary": {
-        "color": "slate-gray",
-        "index": 9
-      },
-      "surface-secondary": {
-        "color": "slate-gray",
-        "index": 8
-      },
-      "subtle-primary": {
-        "color": "slate-purple",
-        "index": 1
-      },
-      "subtle-secondary": {
-        "color": "slate-gray",
-        "index": 1
-      },
-      "border-primary": {
-        "color": "slate-gray",
-        "index": 6
-      },
-      "surface-default": {
-        "color": "neutral",
-        "index": 0
-      },
-      "border-default": {
-        "color": "neutral",
-        "index": 3
-      },
-      "border-subtle": {
-        "color": "neutral",
-        "index": 2
-      },
-      "feedback-error": {
-        "color": "navy",
-        "index": 7
-      },
-      "feedback-success": {
-        "color": "slate-gray",
-        "index": 4
-      },
-      "interactive-disabled": {
-        "color": "neutral",
-        "index": 3
-      },
-      "text-disabled": {
-        "color": "neutral",
-        "index": 5
-      },
-      "border-disabled": {
-        "color": "neutral",
-        "index": 4
-      },
-      "border-focus": {
-        "color": "navy",
-        "index": 4
-      },
-      "surface-inverse": {
-        "color": "neutral",
-        "index": 8
-      },
-      "text-inverse": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-placeholder": {
-        "color": "neutral",
-        "index": 5
-      },
-      "feedback-warning": {
-        "color": "navy",
-        "index": 4
-      }
-    },
-    "darkSemanticOverrides": {
-      "interactive-secondary": {
-        "color": "neutral",
-        "index": 8
-      },
-      "interactive-secondary-hover": {
-        "color": "neutral",
-        "index": 7
-      },
-      "text-default": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-subtle": {
-        "color": "slate-gray",
-        "index": 3
-      },
-      "surface-primary": {
-        "color": "slate-gray",
-        "index": 9
-      },
-      "surface-secondary": {
-        "color": "slate-gray",
-        "index": 8
-      },
-      "subtle-primary": {
-        "color": "slate-purple",
-        "index": 1
-      },
-      "subtle-secondary": {
-        "color": "slate-gray",
-        "index": 8
-      },
-      "border-primary": {
-        "color": "slate-gray",
-        "index": 7
-      },
-      "surface-default": {
-        "color": "neutral",
-        "index": 9
-      },
-      "border-default": {
-        "color": "neutral",
-        "index": 6
-      },
-      "border-subtle": {
-        "color": "neutral",
-        "index": 7
-      },
-      "interactive-disabled": {
-        "color": "neutral",
-        "index": 7
-      },
-      "text-disabled": {
-        "color": "neutral",
-        "index": 6
-      },
-      "border-disabled": {
-        "color": "neutral",
-        "index": 6
-      },
-      "surface-inverse": {
-        "color": "neutral",
-        "index": 1
-      },
-      "text-inverse": {
-        "color": "neutral",
-        "index": 9
-      },
-      "text-placeholder": {
-        "color": "neutral",
-        "index": 5
-      },
-      "feedback-warning": {
-        "color": "navy",
-        "index": 4
-      }
-    },
-    "semanticRadiusMap": {
-      "radius/none": {
-        "value": 0
-      },
-      "radius/default": {
-        "value": 4
-      },
-      "radius/xs": {
-        "value": 2
-      },
-      "radius/sm": {
-        "value": 4
-      },
-      "radius/md": {
-        "value": 6
-      },
-      "radius/lg": {
-        "value": 8
-      },
-      "radius/xl": {
-        "value": 12
-      },
-      "radius/2xl": {
-        "value": 16
-      },
-      "radius/3xl": {
-        "value": 24
-      },
-      "radius/rounded": {
-        "value": 999
-      }
-    },
-    "semanticTypographyMap": {
-      "typography/h1": {
-        "value": 24
-      },
-      "typography/h2": {
-        "value": 20
-      },
-      "typography/h3": {
+      "typography/bodyXl": {
         "value": 18
       },
-      "typography/h4": {
-        "value": 16
-      },
-      "typography/h5": {
-        "value": 14
-      },
-      "typography/h6": {
-        "value": 12
-      },
-      "typography/bodyXl": {
-        "value": 16
-      },
-      "typography/bodyLg": {
-        "value": 14
-      },
-      "typography/bodyMd": {
-        "value": 12
-      },
-      "typography/bodySm": {
-        "value": 10
-      },
       "typography/bodyXs": {
-        "value": 8
+        "value": 12
       },
       "typography/font-family": {
         "value": "Inter"
-      }
-    },
-    "semanticSpacingMap": {
-      "spacing/xs": {
-        "value": 4
-      },
-      "spacing/sm": {
-        "value": 8
-      },
-      "spacing/md": {
-        "value": 12
-      },
-      "spacing/lg": {
-        "value": 16
-      },
-      "spacing/xl": {
-        "value": 20
-      },
-      "spacing/2xl": {
-        "value": 24
-      }
-    },
-    "componentDefaults": {
-      "button-padding-x-default": "sm",
-      "button-padding-y-default": "sm",
-      "button-font-size-default": "sm",
-      "button-line-height-default": "sm",
-      "button-icon-size-default": "sm",
-      "button-icon-stroke-width-default": "sm",
-      "actionicon-size-default": "sm",
-      "actionicon-icon-size-default": "sm",
-      "actionicon-radius-default": "sm",
-      "actionicon-focus-ring-width-default": "sm",
-      "actionicon-focus-ring-spacing-default": "sm",
-      "actionicon-focus-ring-radius-default": "sm",
-      "tabs-radius-default": "sm",
-      "switch-width-default": "md",
-      "switch-height-default": "md",
-      "switch-thumb-size-default": "md",
-      "switch-border-radius-default": "md",
-      "switch-label-font-size-default": "md",
-      "switch-label-line-height-default": "md",
-      "switch-label-gap-default": "md",
-      "checkbox-size-default": "md",
-      "checkbox-border-radius-default": "md",
-      "checkbox-radius-default": "md",
-      "checkbox-icon-size-default": "md",
-      "checkbox-icon-stroke-width-default": "md",
-      "checkbox-label-font-size-default": "md",
-      "checkbox-label-line-height-default": "md",
-      "checkbox-label-gap-default": "md",
-      "radio-size-default": "sm",
-      "radio-icon-size-default": "sm",
-      "radio-label-font-size-default": "sm",
-      "radio-label-line-height-default": "sm",
-      "radio-label-gap-default": "sm",
-      "chip-height-default": "sm",
-      "chip-padding-default": "sm",
-      "chip-checked-padding-default": "sm",
-      "chip-icon-size-default": "sm",
-      "chip-font-size-default": "sm",
-      "chip-radius-default": "sm",
-      "chip-spacing-default": "sm",
-      "card-padding-default": "default",
-      "card-radius-default": "default",
-      "pill-font-size-default": "default",
-      "pill-line-height-default": "default",
-      "pill-padding-x-default": "default",
-      "pill-padding-y-default": "default",
-      "pill-radius-default": "default",
-      "pill-gap-default": "default",
-      "pill-remove-size-default": "default",
-      "badge-font-size-default": "default",
-      "badge-line-height-default": "default",
-      "badge-padding-x-default": "default",
-      "badge-padding-y-default": "default",
-      "badge-radius-default": "default",
-      "textinput-panel-default": "default",
-      "textinput-height-default": "sm",
-      "textinput-font-size-default": "sm",
-      "textinput-line-height-default": "sm",
-      "textinput-label-font-size-default": "sm",
-      "textinput-label-gap-default": "sm",
-      "textinput-icon-size-default": "sm",
-      "textinput-icon-gap-default": "sm",
-      "textinput-section-size-default": "sm",
-      "textinput-padding-x-default": "sm",
-      "textinput-padding-y-default": "sm",
-      "textinput-radius-default": "sm",
-      "text-font-size-default": "sm",
-      "text-line-height-default": "sm"
-    },
-    "dimensionOverrides": {
-      "card-shadow-offset-y": {
-        "_value": 0
-      },
-      "card-shadow-alpha": {
-        "_value": 0
-      },
-      "card-shadow-blur": {
-        "_value": 0
-      }
-    },
-    "gradients": {
-      "hero-cta": {
-        "type": "radial",
-        "angle": 135,
-        "stops": [
-          {
-            "color": "navy",
-            "index": 3,
-            "position": 0,
-            "opacity": 100
-          },
-          {
-            "color": "navy",
-            "index": 1,
-            "position": 100,
-            "opacity": 100
-          },
-          {
-            "color": "navy",
-            "index": 2,
-            "position": 100,
-            "opacity": 100
-          },
-          {
-            "color": "slate-purple",
-            "index": 2,
-            "position": 100,
-            "opacity": 100
-          },
-          {
-            "color": "slate-purple",
-            "index": 8,
-            "position": 100,
-            "opacity": 100
-          }
-        ]
-      }
-    },
-    "componentOverrides": {
-      "button-filled-background": {
-        "gradient": "hero-cta",
-        "opacity": 100
-      }
-    },
-    "componentOverridesDark": {
-      "button-filled-background": {
-        "gradient": "hero-cta",
-        "opacity": 100
       }
     }
   },
   "basiniq": {
     "name": "BasinIq",
+    "gradients": {},
     "primitives": {
       "green": [
         "#E7FDF6",
@@ -1408,13 +1869,101 @@ export const STORYBOOK_BRANDS = {
       ]
     },
     "semanticMap": {
+      "text-subtle": {
+        "color": "slate-gray",
+        "index": 3
+      },
       "transparent": {
         "color": "transparent",
         "index": 0
       },
+      "border-focus": {
+        "color": "navy",
+        "index": 4
+      },
+      "text-default": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-inverse": {
+        "color": "neutral",
+        "index": 0
+      },
+      "border-subtle": {
+        "color": "neutral",
+        "index": 2
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 5
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 3
+      },
+      "border-primary": {
+        "color": "slate-gray",
+        "index": 6
+      },
+      "feedback-error": {
+        "color": "navy",
+        "index": 7
+      },
+      "subtle-primary": {
+        "color": "slate-purple",
+        "index": 1
+      },
+      "border-disabled": {
+        "color": "neutral",
+        "index": 4
+      },
+      "surface-default": {
+        "color": "neutral",
+        "index": 0
+      },
+      "surface-inverse": {
+        "color": "neutral",
+        "index": 8
+      },
+      "surface-primary": {
+        "color": "slate-gray",
+        "index": 9
+      },
+      "feedback-success": {
+        "color": "slate-gray",
+        "index": 4
+      },
+      "feedback-warning": {
+        "color": "navy",
+        "index": 4
+      },
+      "subtle-secondary": {
+        "color": "slate-gray",
+        "index": 1
+      },
+      "text-placeholder": {
+        "color": "neutral",
+        "index": 5
+      },
+      "surface-secondary": {
+        "color": "slate-gray",
+        "index": 8
+      },
       "interactive-primary": {
         "color": "navy",
         "index": 5
+      },
+      "text-on-interactive": {
+        "color": "neutral",
+        "index": 0
+      },
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 3
+      },
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 1
       },
       "interactive-primary-hover": {
         "color": "navy",
@@ -1424,198 +1973,106 @@ export const STORYBOOK_BRANDS = {
         "color": "navy",
         "index": 7
       },
-      "interactive-secondary": {
-        "color": "neutral",
-        "index": 1
-      },
       "interactive-secondary-hover": {
         "color": "neutral",
         "index": 2
-      },
-      "text-on-interactive": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-default": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-subtle": {
-        "color": "slate-gray",
-        "index": 3
-      },
-      "surface-primary": {
-        "color": "slate-gray",
-        "index": 9
-      },
-      "surface-secondary": {
-        "color": "slate-gray",
-        "index": 8
-      },
-      "subtle-primary": {
-        "color": "slate-purple",
-        "index": 1
-      },
-      "subtle-secondary": {
-        "color": "slate-gray",
-        "index": 1
-      },
-      "border-primary": {
-        "color": "slate-gray",
-        "index": 6
-      },
-      "surface-default": {
-        "color": "neutral",
-        "index": 0
-      },
-      "border-default": {
-        "color": "neutral",
-        "index": 3
-      },
-      "border-subtle": {
-        "color": "neutral",
-        "index": 2
-      },
-      "feedback-error": {
-        "color": "navy",
-        "index": 7
-      },
-      "feedback-success": {
-        "color": "slate-gray",
-        "index": 4
-      },
-      "interactive-disabled": {
-        "color": "neutral",
-        "index": 3
-      },
-      "text-disabled": {
-        "color": "neutral",
-        "index": 5
-      },
-      "border-disabled": {
-        "color": "neutral",
-        "index": 4
-      },
-      "border-focus": {
-        "color": "navy",
-        "index": 4
-      },
-      "surface-inverse": {
-        "color": "neutral",
-        "index": 8
-      },
-      "text-inverse": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-placeholder": {
-        "color": "neutral",
-        "index": 5
-      },
-      "feedback-warning": {
-        "color": "navy",
-        "index": 4
       }
     },
-    "darkSemanticOverrides": {
-      "interactive-secondary": {
+    "componentDefaults": {
+      "pill-gap-default": "default",
+      "radio-size-default": "sm",
+      "card-radius-default": "default",
+      "chip-height-default": "sm",
+      "chip-radius-default": "sm",
+      "pill-radius-default": "default",
+      "tabs-radius-default": "sm",
+      "badge-radius-default": "default",
+      "card-padding-default": "default",
+      "chip-padding-default": "sm",
+      "chip-spacing-default": "sm",
+      "switch-width-default": "md",
+      "checkbox-size-default": "md",
+      "switch-height-default": "md",
+      "chip-font-size-default": "sm",
+      "chip-icon-size-default": "sm",
+      "pill-font-size-default": "default",
+      "pill-padding-x-default": "default",
+      "pill-padding-y-default": "default",
+      "text-font-size-default": "sm",
+      "actionicon-size-default": "sm",
+      "badge-font-size-default": "default",
+      "badge-padding-x-default": "default",
+      "badge-padding-y-default": "default",
+      "checkbox-radius-default": "md",
+      "radio-icon-size-default": "sm",
+      "radio-label-gap-default": "sm",
+      "textinput-panel-default": "default",
+      "button-font-size-default": "sm",
+      "button-icon-size-default": "sm",
+      "button-padding-x-default": "sm",
+      "button-padding-y-default": "sm",
+      "pill-line-height-default": "default",
+      "pill-remove-size-default": "default",
+      "switch-label-gap-default": "md",
+      "text-line-height-default": "sm",
+      "textinput-height-default": "sm",
+      "textinput-radius-default": "sm",
+      "actionicon-radius-default": "sm",
+      "badge-line-height-default": "default",
+      "switch-thumb-size-default": "md",
+      "button-line-height-default": "sm",
+      "checkbox-icon-size-default": "md",
+      "checkbox-label-gap-default": "md",
+      "textinput-icon-gap-default": "sm",
+      "textinput-font-size-default": "sm",
+      "textinput-icon-size-default": "sm",
+      "textinput-label-gap-default": "sm",
+      "textinput-padding-x-default": "sm",
+      "textinput-padding-y-default": "sm",
+      "actionicon-icon-size-default": "sm",
+      "chip-checked-padding-default": "sm",
+      "switch-border-radius-default": "md",
+      "radio-label-font-size-default": "sm",
+      "textinput-line-height-default": "sm",
+      "checkbox-border-radius-default": "md",
+      "switch-label-font-size-default": "md",
+      "textinput-section-size-default": "sm",
+      "radio-label-line-height-default": "sm",
+      "button-icon-stroke-width-default": "sm",
+      "checkbox-label-font-size-default": "md",
+      "switch-label-line-height-default": "md",
+      "textinput-label-font-size-default": "sm",
+      "checkbox-icon-stroke-width-default": "md",
+      "checkbox-label-line-height-default": "md",
+      "actionicon-focus-ring-width-default": "sm",
+      "actionicon-focus-ring-radius-default": "sm",
+      "actionicon-focus-ring-spacing-default": "sm"
+    },
+    "previewBackground": {
+      "dark": {
         "color": "neutral",
         "index": 8
       },
-      "interactive-secondary-hover": {
+      "light": {
         "color": "neutral",
-        "index": 7
-      },
-      "text-default": {
-        "color": "neutral",
-        "index": 0
-      },
-      "text-subtle": {
-        "color": "slate-gray",
-        "index": 3
-      },
-      "surface-primary": {
-        "color": "slate-gray",
-        "index": 9
-      },
-      "surface-secondary": {
-        "color": "slate-gray",
-        "index": 8
-      },
-      "subtle-primary": {
-        "color": "slate-purple",
         "index": 1
-      },
-      "subtle-secondary": {
-        "color": "slate-gray",
-        "index": 8
-      },
-      "border-primary": {
-        "color": "slate-gray",
-        "index": 7
-      },
-      "surface-default": {
-        "color": "neutral",
-        "index": 9
-      },
-      "border-default": {
-        "color": "neutral",
-        "index": 6
-      },
-      "border-subtle": {
-        "color": "neutral",
-        "index": 7
-      },
-      "interactive-disabled": {
-        "color": "neutral",
-        "index": 7
-      },
-      "text-disabled": {
-        "color": "neutral",
-        "index": 6
-      },
-      "border-disabled": {
-        "color": "neutral",
-        "index": 6
-      },
-      "surface-inverse": {
-        "color": "neutral",
-        "index": 1
-      },
-      "text-inverse": {
-        "color": "neutral",
-        "index": 9
-      },
-      "text-placeholder": {
-        "color": "neutral",
-        "index": 5
-      },
-      "feedback-warning": {
-        "color": "navy",
-        "index": 4
       }
     },
     "semanticRadiusMap": {
-      "radius/none": {
-        "value": 0
-      },
-      "radius/default": {
-        "value": 4
-      },
-      "radius/xs": {
-        "value": 2
-      },
-      "radius/sm": {
-        "value": 4
+      "radius/lg": {
+        "value": 8
       },
       "radius/md": {
         "value": 6
       },
-      "radius/lg": {
-        "value": 8
+      "radius/sm": {
+        "value": 4
       },
       "radius/xl": {
         "value": 12
+      },
+      "radius/xs": {
+        "value": 2
       },
       "radius/2xl": {
         "value": 16
@@ -1623,8 +2080,143 @@ export const STORYBOOK_BRANDS = {
       "radius/3xl": {
         "value": 24
       },
+      "radius/none": {
+        "value": 0
+      },
+      "radius/default": {
+        "value": 4
+      },
       "radius/rounded": {
         "value": 999
+      }
+    },
+    "componentOverrides": {
+      "switch-track-background": {
+        "color": "neutral",
+        "index": 7
+      },
+      "button-filled-background": {
+        "color": "green",
+        "index": 5,
+        "opacity": 100
+      },
+      "button-filled-background-focus": {
+        "color": "green",
+        "index": 5,
+        "opacity": 100
+      },
+      "button-filled-background-hover": {
+        "color": "green",
+        "index": 6,
+        "opacity": 100
+      },
+      "button-filled-background-pressed": {
+        "color": "green",
+        "index": 4,
+        "opacity": 100
+      }
+    },
+    "dimensionOverrides": {
+      "button-border-radius": {
+        "_value": 20
+      }
+    },
+    "semanticSpacingMap": {
+      "spacing/lg": {
+        "value": 16
+      },
+      "spacing/md": {
+        "value": 12
+      },
+      "spacing/sm": {
+        "value": 8
+      },
+      "spacing/xl": {
+        "value": 20
+      },
+      "spacing/xs": {
+        "value": 4
+      },
+      "spacing/2xl": {
+        "value": 24
+      }
+    },
+    "darkSemanticOverrides": {
+      "text-subtle": {
+        "color": "slate-gray",
+        "index": 3
+      },
+      "text-default": {
+        "color": "neutral",
+        "index": 0
+      },
+      "text-inverse": {
+        "color": "neutral",
+        "index": 9
+      },
+      "border-subtle": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-primary": {
+        "color": "slate-gray",
+        "index": 7
+      },
+      "subtle-primary": {
+        "color": "slate-purple",
+        "index": 1
+      },
+      "border-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "surface-default": {
+        "color": "neutral",
+        "index": 9
+      },
+      "surface-inverse": {
+        "color": "neutral",
+        "index": 1
+      },
+      "surface-primary": {
+        "color": "slate-gray",
+        "index": 9
+      },
+      "feedback-warning": {
+        "color": "navy",
+        "index": 4
+      },
+      "subtle-secondary": {
+        "color": "slate-gray",
+        "index": 8
+      },
+      "text-placeholder": {
+        "color": "neutral",
+        "index": 5
+      },
+      "surface-secondary": {
+        "color": "slate-gray",
+        "index": 8
+      },
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 7
+      },
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 7
       }
     },
     "semanticTypographyMap": {
@@ -1646,8 +2238,413 @@ export const STORYBOOK_BRANDS = {
       "typography/h6": {
         "value": 12
       },
+      "typography/bodyLg": {
+        "value": 14
+      },
+      "typography/bodyMd": {
+        "value": 12
+      },
+      "typography/bodySm": {
+        "value": 10
+      },
       "typography/bodyXl": {
         "value": 16
+      },
+      "typography/bodyXs": {
+        "value": 8
+      },
+      "typography/font-family": {
+        "value": "Inter"
+      }
+    },
+    "componentOverridesDark": {
+      "button-filled-background": {
+        "color": "green",
+        "index": 5,
+        "opacity": 100
+      },
+      "button-filled-background-focus": {
+        "color": "green",
+        "index": 5,
+        "opacity": 100
+      },
+      "button-filled-background-hover": {
+        "color": "green",
+        "index": 6,
+        "opacity": 100
+      },
+      "button-filled-background-pressed": {
+        "color": "green",
+        "index": 4,
+        "opacity": 100
+      }
+    }
+  },
+  "brand-2": {
+    "name": "Brand 2",
+    "gradients": {},
+    "primitives": {},
+    "semanticMap": {
+      "text-subtle": {
+        "color": "neutral",
+        "index": 4
+      },
+      "transparent": {
+        "color": "transparent",
+        "index": 0
+      },
+      "border-focus": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-default": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-inverse": {
+        "color": "neutral",
+        "index": 0
+      },
+      "border-subtle": {
+        "color": "neutral",
+        "index": 2
+      },
+      "feedback-info": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 5
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 3
+      },
+      "border-primary": {
+        "color": "neutral",
+        "index": 6
+      },
+      "feedback-error": {
+        "color": "neutral",
+        "index": 8
+      },
+      "subtle-primary": {
+        "color": "neutral",
+        "index": 1
+      },
+      "border-disabled": {
+        "color": "neutral",
+        "index": 4
+      },
+      "surface-default": {
+        "color": "neutral",
+        "index": 0
+      },
+      "surface-inverse": {
+        "color": "neutral",
+        "index": 8
+      },
+      "surface-primary": {
+        "color": "neutral",
+        "index": 9
+      },
+      "feedback-success": {
+        "color": "neutral",
+        "index": 5
+      },
+      "feedback-warning": {
+        "color": "neutral",
+        "index": 6
+      },
+      "subtle-secondary": {
+        "color": "neutral",
+        "index": 2
+      },
+      "text-placeholder": {
+        "color": "neutral",
+        "index": 5
+      },
+      "surface-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-primary": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-on-interactive": {
+        "color": "neutral",
+        "index": 0
+      },
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 3
+      },
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 1
+      },
+      "interactive-primary-hover": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-primary-pressed": {
+        "color": "neutral",
+        "index": 9
+      },
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 2
+      }
+    },
+    "componentDefaults": {
+      "pill-gap-default": "default",
+      "radio-size-default": "sm",
+      "avatar-size-default": "md",
+      "card-radius-default": "default",
+      "chip-height-default": "sm",
+      "chip-radius-default": "sm",
+      "loader-size-default": "md",
+      "pill-radius-default": "default",
+      "badge-radius-default": "default",
+      "card-padding-default": "default",
+      "chip-spacing-default": "sm",
+      "switch-width-default": "md",
+      "avatar-radius-default": "md",
+      "checkbox-size-default": "md",
+      "switch-height-default": "md",
+      "chip-font-size-default": "sm",
+      "chip-icon-size-default": "sm",
+      "chip-padding-x-default": "sm",
+      "chip-padding-y-default": "sm",
+      "pill-font-size-default": "default",
+      "pill-padding-x-default": "default",
+      "pill-padding-y-default": "default",
+      "text-font-size-default": "sm",
+      "actionicon-size-default": "sm",
+      "badge-font-size-default": "default",
+      "badge-padding-x-default": "default",
+      "badge-padding-y-default": "default",
+      "checkbox-radius-default": "md",
+      "progress-height-default": "md",
+      "progress-radius-default": "md",
+      "radio-icon-size-default": "sm",
+      "radio-label-gap-default": "sm",
+      "textinput-panel-default": "default",
+      "button-font-size-default": "sm",
+      "button-icon-size-default": "sm",
+      "button-padding-x-default": "sm",
+      "button-padding-y-default": "sm",
+      "pill-line-height-default": "default",
+      "pill-remove-size-default": "default",
+      "switch-label-gap-default": "md",
+      "text-line-height-default": "sm",
+      "textinput-height-default": "sm",
+      "textinput-radius-default": "sm",
+      "actionicon-radius-default": "sm",
+      "badge-line-height-default": "default",
+      "switch-thumb-size-default": "md",
+      "tabs-pills-radius-default": "sm",
+      "button-line-height-default": "sm",
+      "checkbox-icon-size-default": "md",
+      "checkbox-label-gap-default": "md",
+      "textinput-icon-gap-default": "sm",
+      "button-icon-spacing-default": "sm",
+      "loader-stroke-width-default": "md",
+      "tabs-default-radius-default": "sm",
+      "textinput-font-size-default": "sm",
+      "textinput-icon-size-default": "sm",
+      "textinput-label-gap-default": "sm",
+      "textinput-padding-x-default": "sm",
+      "textinput-padding-y-default": "sm",
+      "actionicon-icon-size-default": "sm",
+      "switch-border-radius-default": "md",
+      "tabs-outlined-radius-default": "sm",
+      "radio-label-font-size-default": "sm",
+      "textinput-line-height-default": "sm",
+      "checkbox-border-radius-default": "md",
+      "chip-checked-padding-x-default": "sm",
+      "chip-checked-padding-y-default": "sm",
+      "switch-label-font-size-default": "md",
+      "textinput-section-size-default": "sm",
+      "radio-label-line-height-default": "sm",
+      "button-icon-stroke-width-default": "sm",
+      "checkbox-label-font-size-default": "md",
+      "switch-label-line-height-default": "md",
+      "loader-oval-corner-radius-default": "md",
+      "textinput-label-font-size-default": "sm",
+      "checkbox-icon-stroke-width-default": "md",
+      "checkbox-label-line-height-default": "md",
+      "actionicon-focus-ring-width-default": "sm",
+      "actionicon-focus-ring-radius-default": "sm",
+      "actionicon-focus-ring-spacing-default": "sm"
+    },
+    "previewBackground": {
+      "dark": {
+        "color": "neutral",
+        "index": 8
+      },
+      "light": {
+        "color": "neutral",
+        "index": 1
+      }
+    },
+    "semanticRadiusMap": {
+      "radius/lg": {
+        "value": 8
+      },
+      "radius/md": {
+        "value": 6
+      },
+      "radius/sm": {
+        "value": 4
+      },
+      "radius/xl": {
+        "value": 12
+      },
+      "radius/xs": {
+        "value": 2
+      },
+      "radius/2xl": {
+        "value": 16
+      },
+      "radius/3xl": {
+        "value": 24
+      },
+      "radius/none": {
+        "value": 0
+      },
+      "radius/default": {
+        "value": 4
+      },
+      "radius/rounded": {
+        "value": 999
+      }
+    },
+    "componentOverrides": {
+      "switch-track-background": {
+        "color": "neutral",
+        "index": 7
+      }
+    },
+    "dimensionOverrides": {},
+    "semanticSpacingMap": {
+      "spacing/lg": {
+        "value": 16
+      },
+      "spacing/md": {
+        "value": 12
+      },
+      "spacing/sm": {
+        "value": 8
+      },
+      "spacing/xl": {
+        "value": 20
+      },
+      "spacing/xs": {
+        "value": 4
+      },
+      "spacing/2xl": {
+        "value": 24
+      }
+    },
+    "darkSemanticOverrides": {
+      "text-subtle": {
+        "color": "neutral",
+        "index": 4
+      },
+      "text-default": {
+        "color": "neutral",
+        "index": 0
+      },
+      "text-inverse": {
+        "color": "neutral",
+        "index": 9
+      },
+      "border-subtle": {
+        "color": "neutral",
+        "index": 7
+      },
+      "text-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-default": {
+        "color": "neutral",
+        "index": 6
+      },
+      "border-primary": {
+        "color": "neutral",
+        "index": 7
+      },
+      "subtle-primary": {
+        "color": "neutral",
+        "index": 1
+      },
+      "border-disabled": {
+        "color": "neutral",
+        "index": 6
+      },
+      "surface-default": {
+        "color": "neutral",
+        "index": 9
+      },
+      "surface-inverse": {
+        "color": "neutral",
+        "index": 1
+      },
+      "surface-primary": {
+        "color": "neutral",
+        "index": 9
+      },
+      "feedback-warning": {
+        "color": "neutral",
+        "index": 6
+      },
+      "subtle-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "text-placeholder": {
+        "color": "neutral",
+        "index": 5
+      },
+      "surface-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-disabled": {
+        "color": "neutral",
+        "index": 7
+      },
+      "interactive-secondary": {
+        "color": "neutral",
+        "index": 8
+      },
+      "interactive-secondary-hover": {
+        "color": "neutral",
+        "index": 7
+      }
+    },
+    "semanticTypographyMap": {
+      "typography/h1": {
+        "value": 24
+      },
+      "typography/h2": {
+        "value": 20
+      },
+      "typography/h3": {
+        "value": 18
+      },
+      "typography/h4": {
+        "value": 16
+      },
+      "typography/h5": {
+        "value": 14
+      },
+      "typography/h6": {
+        "value": 12
       },
       "typography/bodyLg": {
         "value": 14
@@ -1658,152 +2655,15 @@ export const STORYBOOK_BRANDS = {
       "typography/bodySm": {
         "value": 10
       },
+      "typography/bodyXl": {
+        "value": 16
+      },
       "typography/bodyXs": {
         "value": 8
       },
       "typography/font-family": {
         "value": "Inter"
       }
-    },
-    "semanticSpacingMap": {
-      "spacing/xs": {
-        "value": 4
-      },
-      "spacing/sm": {
-        "value": 8
-      },
-      "spacing/md": {
-        "value": 12
-      },
-      "spacing/lg": {
-        "value": 16
-      },
-      "spacing/xl": {
-        "value": 20
-      },
-      "spacing/2xl": {
-        "value": 24
-      }
-    },
-    "componentDefaults": {
-      "button-padding-x-default": "sm",
-      "button-padding-y-default": "sm",
-      "button-font-size-default": "sm",
-      "button-line-height-default": "sm",
-      "button-icon-size-default": "sm",
-      "button-icon-stroke-width-default": "sm",
-      "actionicon-size-default": "sm",
-      "actionicon-icon-size-default": "sm",
-      "actionicon-radius-default": "sm",
-      "actionicon-focus-ring-width-default": "sm",
-      "actionicon-focus-ring-spacing-default": "sm",
-      "actionicon-focus-ring-radius-default": "sm",
-      "tabs-radius-default": "sm",
-      "switch-width-default": "md",
-      "switch-height-default": "md",
-      "switch-thumb-size-default": "md",
-      "switch-border-radius-default": "md",
-      "switch-label-font-size-default": "md",
-      "switch-label-line-height-default": "md",
-      "switch-label-gap-default": "md",
-      "checkbox-size-default": "md",
-      "checkbox-border-radius-default": "md",
-      "checkbox-radius-default": "md",
-      "checkbox-icon-size-default": "md",
-      "checkbox-icon-stroke-width-default": "md",
-      "checkbox-label-font-size-default": "md",
-      "checkbox-label-line-height-default": "md",
-      "checkbox-label-gap-default": "md",
-      "radio-size-default": "sm",
-      "radio-icon-size-default": "sm",
-      "radio-label-font-size-default": "sm",
-      "radio-label-line-height-default": "sm",
-      "radio-label-gap-default": "sm",
-      "chip-height-default": "sm",
-      "chip-padding-default": "sm",
-      "chip-checked-padding-default": "sm",
-      "chip-icon-size-default": "sm",
-      "chip-font-size-default": "sm",
-      "chip-radius-default": "sm",
-      "chip-spacing-default": "sm",
-      "card-padding-default": "default",
-      "card-radius-default": "default",
-      "pill-font-size-default": "default",
-      "pill-line-height-default": "default",
-      "pill-padding-x-default": "default",
-      "pill-padding-y-default": "default",
-      "pill-radius-default": "default",
-      "pill-gap-default": "default",
-      "pill-remove-size-default": "default",
-      "badge-font-size-default": "default",
-      "badge-line-height-default": "default",
-      "badge-padding-x-default": "default",
-      "badge-padding-y-default": "default",
-      "badge-radius-default": "default",
-      "textinput-panel-default": "default",
-      "textinput-height-default": "sm",
-      "textinput-font-size-default": "sm",
-      "textinput-line-height-default": "sm",
-      "textinput-label-font-size-default": "sm",
-      "textinput-label-gap-default": "sm",
-      "textinput-icon-size-default": "sm",
-      "textinput-icon-gap-default": "sm",
-      "textinput-section-size-default": "sm",
-      "textinput-padding-x-default": "sm",
-      "textinput-padding-y-default": "sm",
-      "textinput-radius-default": "sm",
-      "text-font-size-default": "sm",
-      "text-line-height-default": "sm"
-    },
-    "dimensionOverrides": {
-      "button-border-radius": {
-        "_value": 20
-      }
-    },
-    "componentOverrides": {
-      "button-filled-background": {
-        "color": "green",
-        "index": 5,
-        "opacity": 100
-      },
-      "button-filled-background-hover": {
-        "color": "green",
-        "index": 6,
-        "opacity": 100
-      },
-      "button-filled-background-focus": {
-        "color": "green",
-        "index": 5,
-        "opacity": 100
-      },
-      "button-filled-background-pressed": {
-        "color": "green",
-        "index": 4,
-        "opacity": 100
-      }
-    },
-    "componentOverridesDark": {
-      "button-filled-background": {
-        "color": "green",
-        "index": 5,
-        "opacity": 100
-      },
-      "button-filled-background-hover": {
-        "color": "green",
-        "index": 6,
-        "opacity": 100
-      },
-      "button-filled-background-focus": {
-        "color": "green",
-        "index": 5,
-        "opacity": 100
-      },
-      "button-filled-background-pressed": {
-        "color": "green",
-        "index": 4,
-        "opacity": 100
-      }
-    },
-    "gradients": {}
+    }
   }
 };

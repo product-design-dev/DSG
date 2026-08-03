@@ -9,6 +9,7 @@ export default function ComponentSelect({
   onAdd,
   addLabel = "+ Add new",
   addPlaceholder = "Name...",
+  labels,
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -18,8 +19,10 @@ export default function ComponentSelect({
   const addInputRef = useRef(null);
   const containerRef = useRef(null);
 
+  const getLabel = (opt) => (labels && labels[opt]) || opt;
+
   const filtered = search
-    ? options.filter((o) => o.toLowerCase().includes(search.toLowerCase()))
+    ? options.filter((o) => getLabel(o).toLowerCase().includes(search.toLowerCase()))
     : options;
 
   useEffect(() => {
@@ -199,7 +202,7 @@ export default function ComponentSelect({
                     e.currentTarget.style.background = "transparent";
                 }}
               >
-                {opt}
+                {getLabel(opt)}
               </button>
             ))}
           </div>

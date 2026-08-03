@@ -1072,6 +1072,10 @@ function resolveManagedComponentKeyFromName(name) {
     gaugechart: "chartradial",
   };
   if (chartAliases[normalized]) return chartAliases[normalized];
+  // Hand-maintained copy of src/generator/data/componentTokens.js's
+  // COMPONENT_NAMES — this plugin runs in a sandboxed environment with no
+  // bundler, so it can't import that file directly. Run
+  // `npm run check:figma-plugin-sync` after changing either list.
   var managedKeys = [
     "button", "switch", "burger", "segmentedcontrol", "slider", "rangeslider", "checkbox", "radio",
     "chip", "notification", "alert", "modal", "tooltip", "popover", "menu", "divider", "list", "loader",
@@ -1314,6 +1318,12 @@ async function buildComponents(varMap, componentsToBuild, buildOptions, collecti
     }
     return next.length > 0 ? next : allowed.slice();
   }
+  // These default variant lists are hand-maintained copies of what
+  // src/generator/data/componentTokens.js implicitly defines for button/
+  // actionicon/tabs. Unlike managedKeys (see check:figma-plugin-sync), token
+  // key names don't follow a clean "component-variant-property" pattern, so
+  // there's no reliable automated check here — if a variant is added/removed
+  // on the web app side, update these three lists by hand too.
   var buttonVariants = resolveVariantList(buildOptions && buildOptions.buttonVariants, ["filled", "outlined", "ghost"]);
   var actionIconVariants = resolveVariantList(buildOptions && buildOptions.actionIconVariants, ["default", "filled", "light", "outlined", "transparent"]);
   var tabsVariants = resolveVariantList(buildOptions && buildOptions.tabsVariants, ["default", "outlined", "pills"]);
@@ -3143,7 +3153,12 @@ async function buildUsageDocsPage(componentSets, titleFont) {
             var resolvedKey = getPropKey(variantProps, userKey);
             if (resolvedKey) props[resolvedKey] = propPatch[userKey];
           }
-          try { inst.setProperties(props); } catch (e) {}
+          try {
+            inst.setProperties(props);
+          } catch (e) {
+            console.log("[Docs] WARNING: setProperties failed for \"" + set.name + "\": " + e);
+            progress("[Docs] Warning: could not apply variant properties for \"" + set.name + "\" (" + e + ")");
+          }
           clearExplicitModesInSubtree(inst);
           return inst;
         }
@@ -4711,7 +4726,12 @@ async function buildUsageDocsPage(componentSets, titleFont) {
           var resolvedKey = getPropKey(variantProps, userKey);
           if (resolvedKey) props[resolvedKey] = propPatch[userKey];
         }
-        try { inst.setProperties(props); } catch (e) {}
+        try {
+          inst.setProperties(props);
+        } catch (e) {
+          console.log("[Docs] WARNING: setProperties failed for \"" + lowerSetName + "\": " + e);
+          progress("[Docs] Warning: could not apply variant properties for \"" + lowerSetName + "\" (" + e + ")");
+        }
         clearExplicitModesInSubtree(inst);
         return inst;
       }
@@ -22192,7 +22212,12 @@ function setAccordionInstanceProps(instance, propPatch) {
     if (resolvedKey) props[resolvedKey] = propValue;
   }
   if (Object.keys(props).length > 0) {
-    try { instance.setProperties(props); } catch (_accordionInstancePropsErr) {}
+    try {
+      instance.setProperties(props);
+    } catch (_accordionInstancePropsErr) {
+      console.log("[Accordion] WARNING: setProperties failed: " + _accordionInstancePropsErr);
+      progress("[Accordion] Warning: could not apply variant properties (" + _accordionInstancePropsErr + ")");
+    }
   }
 }
 
@@ -23229,7 +23254,12 @@ function setInstancePropertyByBaseName(instance, baseName, value) {
   if (!targetKey) return;
   var patch = {};
   patch[targetKey] = value;
-  try { instance.setProperties(patch); } catch (_tabsSetInstPropErr) {}
+  try {
+    instance.setProperties(patch);
+  } catch (_tabsSetInstPropErr) {
+    console.log("[Tabs] WARNING: setProperties failed for \"" + baseName + "\": " + _tabsSetInstPropErr);
+    progress("[Tabs] Warning: could not set \"" + baseName + "\" (" + _tabsSetInstPropErr + ")");
+  }
 }
 
 function createTabsMenuDropdown(options) {

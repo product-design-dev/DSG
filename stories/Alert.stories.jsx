@@ -26,7 +26,7 @@ export default {
   component: AlertPreview,
   argTypes: {
     variant: { control: "select", options: ["default", "filled", "light", "outline", "transparent", "white"] },
-    color: { control: "select", options: ["blue", "teal", "red", "yellow", "gray"] },
+    color: { control: "select", options: ["info", "success", "warning", "error"] },
     radius: { control: "select", options: ["xs", "sm", "md", "lg", "xl"] },
     withCloseButton: { control: "boolean" },
     withIcon: { control: "boolean" },
@@ -35,7 +35,7 @@ export default {
   },
   args: {
     variant: "light",
-    color: "blue",
+    color: "info",
     radius: "md",
     withCloseButton: false,
     withIcon: true,

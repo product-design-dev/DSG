@@ -4,9 +4,10 @@ import { TOKEN_LOCK_VERSION } from "../utils/buildTokenLock";
 import { diffTokenPayloads, formatTokenChangelog, isEmptyDiff } from "../utils/diffTokenPayloads";
 import { useFigmaSync } from "../hooks/useFigmaSync";
 import { CHART_COMPONENTS } from "../data/componentTokens";
+import { RELAY_HTTP, RELAY_AUTH_HEADERS } from "../relayConfig";
 
-const SAVE_LOCK_ENDPOINT = "http://localhost:9001/api/save-token-lock";
-const READ_LOCK_ENDPOINT = "http://localhost:9001/api/token-lock";
+const SAVE_LOCK_ENDPOINT = `${RELAY_HTTP}/api/save-token-lock`;
+const READ_LOCK_ENDPOINT = `${RELAY_HTTP}/api/token-lock`;
 
 // Tries to write tokens.lock.json straight into the repo via the relay server.
 // Returns true on success. Throws if the relay is down or running an old build
@@ -14,7 +15,7 @@ const READ_LOCK_ENDPOINT = "http://localhost:9001/api/token-lock";
 async function writeTokenLockToRepo(lock) {
   const res = await fetch(SAVE_LOCK_ENDPOINT, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...RELAY_AUTH_HEADERS },
     body: JSON.stringify(lock),
   });
   if (!res.ok) {
@@ -27,7 +28,7 @@ async function writeTokenLockToRepo(lock) {
 // Reads the saved baseline (the anchor the changelog diffs against). Returns the
 // parsed lock, or null if no baseline has been saved yet. Throws if relay is down.
 async function readBaseline() {
-  const res = await fetch(READ_LOCK_ENDPOINT);
+  const res = await fetch(READ_LOCK_ENDPOINT, { headers: RELAY_AUTH_HEADERS });
   if (!res.ok) throw new Error(`relay returned ${res.status}`);
   const data = await res.json();
   if (data && data.missing) return null;

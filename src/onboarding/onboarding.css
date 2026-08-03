@@ -111,14 +111,19 @@
   flex: 1;
 }
 
-.step-title {
+/* Scoped under .step (not just .step-title/.step-subtitle alone) so they
+   outrank the ".onboarding :is(h1,h2,h3,p) { margin: 0 }" reset in
+   marketing/theme.css, which is a compound selector and otherwise wins on
+   specificity — same issue and fix as landing.css's .section-title/
+   .section-subtitle. */
+.step .step-title {
   font-size: 28px;
   font-weight: 600;
   letter-spacing: -0.02em;
   margin-bottom: 8px;
 }
 
-.step-subtitle {
+.step .step-subtitle {
   color: var(--text-secondary);
   margin-bottom: 32px;
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Chip } from "@mantine/core";
-import { resolveColor, resolveDimension } from "../../utils/resolveToken";
+import { resolveDimension, resolveFirstColor } from "../../utils/resolveToken";
 import { COMPONENT_TOKENS } from "../../data/componentTokens";
 
 export default function ChipPreview({
@@ -22,11 +22,7 @@ export default function ChipPreview({
   const stateSuffix = state && state !== "default" ? `-${state}` : "";
   const isDisabled = state === "disabled";
 
-  const resolveFirst = (tokenKeys) => {
-    const key = tokenKeys.find((k) => tokens[k]);
-    if (!key) return "#FF00FF";
-    return resolveColor(brands, brandId, tokens[key]?.semantic, "light", key);
-  };
+  const resolveFirst = (tokenKeys) => resolveFirstColor(tokens, brands, brandId, tokenKeys);
 
   // Resolve colors based on variant and checked state
   const filledUncheckedBg = resolveFirst([

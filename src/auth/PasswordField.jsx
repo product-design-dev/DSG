@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ShowIcon } from "./icons/ShowIcon";
 import { HideIcon } from "./icons/HideIcon";
 
-export function PasswordField({ value, onChange, placeholder = "Password" }) {
+export function PasswordField({ value, onChange, placeholder = "Password", autoComplete = "current-password" }) {
   const [visible, setVisible] = useState(false);
 
   return (
@@ -12,6 +12,7 @@ export function PasswordField({ value, onChange, placeholder = "Password" }) {
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        autoComplete={autoComplete}
         required
       />
       <button

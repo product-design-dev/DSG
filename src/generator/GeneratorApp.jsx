@@ -8,6 +8,8 @@ import {
   Text,
   Group,
 } from "@mantine/core";
+import { supabase } from "../auth/supabaseClient";
+import { RELAY_HTTP, RELAY_AUTH_HEADERS } from "./relayConfig";
 import { INITIAL_BRANDS, BRAND_STARTER_SEMANTIC_MAP } from "./data/brands";
 import { STORYBOOK_BRANDS } from "./data/storybookBrands";
 import { createNewBrand } from "./utils/createNewBrand";
@@ -30,6 +32,7 @@ import {
   chartSeriesOpacityMappingForToken,
   chartShadeMappingForToken,
   chartShadeOpacityMappingForToken,
+  mappingToHex,
 } from "./utils/resolveToken";
 import { resolveGradientCss } from "./utils/resolveGradient";
 import Section from "./components/shared/Section";
@@ -215,7 +218,6 @@ const APP_STORAGE_KEY = "design-system-generator:v1";
 // port) and can be cleared by the browser, which is why edits appeared to
 // "reset" between sessions. The relay also writes brands to disk so they
 // survive port changes, browser clears, and multiple tabs.
-const RELAY_HTTP = "http://localhost:9001";
 const DEFAULT_TITLE_TEXT = "Why guess when you can know.";
 
 function loadPersistedAppState() {
@@ -237,7 +239,7 @@ function postBrandsToDisk(stateObj) {
     const body = JSON.stringify(stateObj);
     fetch(`${RELAY_HTTP}/api/save-brands`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...RELAY_AUTH_HEADERS },
       body,
     }).catch(() => {
       // Relay offline — localStorage remains the active fallback.
@@ -245,6 +247,76 @@ function postBrandsToDisk(stateObj) {
   } catch (_err) {
     // Never let autosave throw into the render/effect path.
   }
+}
+
+// Per-user brand storage in Supabase (`public.brands`, one row per brand,
+// RLS-scoped to auth.uid()). This is the durable, cross-device source of
+// truth for a signed-in user; localStorage/disk-relay above remain a local
+// cache/fallback layered underneath it.
+async function fetchUserBrands(userId) {
+  if (!userId) return null;
+  const { data, error } = await supabase
+    .from("brands")
+    .select("brand_key, data")
+    .eq("user_id", userId);
+  if (error) {
+    console.error("[DSG] Failed to load brands from Supabase:", error);
+    return null; // unknown state — don't let a transient error wipe local data
+  }
+  return data; // [] means "no rows yet", not an error
+}
+
+// Returns true/false instead of swallowing the error so callers can surface a
+// visible warning — a silent failure here means the user's edits look saved
+// (localStorage/disk still succeed) but never reach their account.
+async function upsertUserBrand(userId, brandKey, name, brandData) {
+  if (!userId) return true;
+  const { error } = await supabase.from("brands").upsert(
+    {
+      user_id: userId,
+      brand_key: brandKey,
+      name,
+      data: brandData,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id,brand_key" }
+  );
+  if (error) {
+    console.error(`[DSG] Failed to save brand "${brandKey}" to Supabase:`, error);
+    return false;
+  }
+  return true;
+}
+
+async function deleteUserBrand(userId, brandKey) {
+  if (!userId) return true;
+  const { error } = await supabase
+    .from("brands")
+    .delete()
+    .eq("user_id", userId)
+    .eq("brand_key", brandKey);
+  if (error) {
+    console.error(`[DSG] Failed to delete brand "${brandKey}" from Supabase:`, error);
+    return false;
+  }
+  return true;
+}
+
+function seedBrandsFromOnboarding(onboardingAnswers, userEmail) {
+  const rawNames =
+    onboardingAnswers?.brandNames?.filter((n) => String(n || "").trim().length > 0) || [];
+  const names =
+    rawNames.length > 0
+      ? rawNames
+      : [userEmail ? `${userEmail.split("@")[0]}'s Brand` : "My Brand"];
+  const seeded = {};
+  const ids = [];
+  names.forEach((rawName) => {
+    const { id, brand } = createNewBrand(rawName, ids);
+    ids.push(id);
+    seeded[id] = brand;
+  });
+  return seeded;
 }
 
 function enforceTextDefaultMappings(brandsInput) {
@@ -351,6 +423,47 @@ function enforceTextDefaultMappings(brandsInput) {
       const fromDark = INITIAL_BRANDS[brandId]?.darkSemanticOverrides?.["feedback-warning"];
       b.darkSemanticOverrides["feedback-warning"] = {
         ...(fromDark || b.semanticMap["feedback-warning"]),
+      };
+    }
+  });
+
+  // Upgrade the legacy "text-default" (light mode) default of neutral/0
+  // (white) to neutral/7. Dozens of component tokens (tabs, switch, card,
+  // table, calendar, modal, chip, etc.) resolve text color through this one
+  // semantic, so white-on-white made most of them invisible against the
+  // default light surface. Dark mode is untouched (white-on-dark is
+  // correct there). Only touches brands still sitting on the exact legacy
+  // default — any brand where a user already remapped text-default is left
+  // alone.
+  Object.keys(next).forEach((brandId) => {
+    const b = next[brandId];
+    if (!b.semanticMap) return;
+    const current = b.semanticMap["text-default"];
+    if (current && current.color === "neutral" && Number(current.index) === 0) {
+      b.semanticMap["text-default"] = { color: "neutral", index: 7 };
+    }
+  });
+
+  // Backfill switch-track-background to a literal neutral/7 by default. It
+  // resolves through "surface-default" (used broadly for page/card
+  // backgrounds), so fixing the semantic itself would ripple elsewhere —
+  // this is a component-level override instead, matching only this token.
+  Object.keys(next).forEach((brandId) => {
+    const b = next[brandId];
+    if (!b.componentOverrides) b.componentOverrides = {};
+    if (!b.componentOverrides["switch-track-background"]) {
+      b.componentOverrides["switch-track-background"] = { color: "neutral", index: 7 };
+    }
+  });
+
+  // Backfill the preview-canvas background (light/dark) for brands that
+  // predate this setting.
+  Object.keys(next).forEach((brandId) => {
+    const b = next[brandId];
+    if (!b.previewBackground) {
+      b.previewBackground = {
+        light: { color: "neutral", index: 1 },
+        dark: { color: "neutral", index: 8 },
       };
     }
   });
@@ -482,7 +595,7 @@ function mergeRecoveredBrands(brandsInput) {
   return merged;
 }
 
-export default function GeneratorApp({ userEmail, onLogout }) {
+export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onLogout }) {
   const COMPONENT_LABELS = {
     foundations: "Foundations",
     docs: "Docs Theme",
@@ -558,9 +671,13 @@ export default function GeneratorApp({ userEmail, onLogout }) {
   // startup state can never overwrite newer on-disk data.
   const diskLoadedRef = useRef(false);
   const diskSaveTimerRef = useRef(null);
+  const supabaseLoadedRef = useRef(false);
+  const supabaseSaveTimerRef = useRef(null);
   const [brandDeleteModalOpened, setBrandDeleteModalOpened] = useState(false);
   const [brandDeleteTargetId, setBrandDeleteTargetId] = useState(null);
   const [brandDeleteConfirmInput, setBrandDeleteConfirmInput] = useState("");
+  const [brandRenameModalOpened, setBrandRenameModalOpened] = useState(false);
+  const [brandRenameInput, setBrandRenameInput] = useState("");
   const [paletteDeleteModalOpened, setPaletteDeleteModalOpened] = useState(false);
   const [paletteDeleteTargetName, setPaletteDeleteTargetName] = useState("");
   const [paletteDeleteConfirmInput, setPaletteDeleteConfirmInput] = useState("");
@@ -576,6 +693,32 @@ export default function GeneratorApp({ userEmail, onLogout }) {
   if (typeof window !== "undefined") {
     window.__DSG_PREVIEW_THEME = previewTheme;
     window.__DSG_PREVIEW_BRAND = activeBrand;
+    const previewBrandData = brands[activeBrand];
+    const previewBg = previewBrandData?.previewBackground || {
+      light: { color: "neutral", index: 1 },
+      dark: { color: "neutral", index: 8 },
+    };
+    window.__DSG_PREVIEW_BG = previewBrandData
+      ? {
+          light: previewBg.light,
+          dark: previewBg.dark,
+          lightHex: mappingToHex(previewBrandData, previewBg.light),
+          darkHex: mappingToHex(previewBrandData, previewBg.dark),
+          brandColors: Object.keys(previewBrandData.primitives || {}),
+          globalColors: Object.keys(GLOBAL_PRIMITIVES),
+          onUpdate: (theme, mapping) => {
+            console.log("[DBG] previewBg onUpdate called", theme, mapping, "activeBrand=", activeBrand);
+            setBrands((prev) => {
+              console.log("[DBG] setBrands updater running, prev[activeBrand] previewBackground=", prev[activeBrand]?.previewBackground);
+              if (!prev[activeBrand]) return prev;
+              const nextBrand = { ...prev[activeBrand] };
+              nextBrand.previewBackground = { ...(nextBrand.previewBackground || previewBg), [theme]: mapping };
+              console.log("[DBG] nextBrand previewBackground=", nextBrand.previewBackground);
+              return { ...prev, [activeBrand]: nextBrand };
+            });
+          },
+        }
+      : null;
   }
   const [storybookLoading, setStorybookLoading] = useState(false);
   const [storybookError, setStorybookError] = useState(null);
@@ -991,7 +1134,6 @@ export default function GeneratorApp({ userEmail, onLogout }) {
   // Sync active size when component changes
   const handleComponentChange = useCallback((newComp) => {
     setActiveComponent(newComp);
-    if (newComp !== "accordion") setActiveAccordionNavItem("accordion");
     setActiveColorToken(null);
     setActiveDimensionToken(null);
     if (newComp === "button") {
@@ -1448,6 +1590,32 @@ export default function GeneratorApp({ userEmail, onLogout }) {
     [brands]
   );
 
+  const openBrandRenameModal = useCallback(() => {
+    if (!brands[activeBrand]) return;
+    setBrandRenameInput(brands[activeBrand].name || activeBrand);
+    setBrandRenameModalOpened(true);
+  }, [activeBrand, brands]);
+
+  const closeBrandRenameModal = useCallback(() => {
+    setBrandRenameModalOpened(false);
+    setBrandRenameInput("");
+  }, []);
+
+  const canSubmitBrandRename = brandRenameInput.trim().length > 0;
+
+  const executeBrandRename = useCallback(() => {
+    const trimmed = brandRenameInput.trim();
+    if (!trimmed) return;
+    setBrands((prev) => {
+      if (!prev[activeBrand]) return prev;
+      return {
+        ...prev,
+        [activeBrand]: { ...prev[activeBrand], name: trimmed },
+      };
+    });
+    closeBrandRenameModal();
+  }, [activeBrand, brandRenameInput, closeBrandRenameModal]);
+
   const openBrandDeleteModal = useCallback(() => {
     const ids = Object.keys(brands);
     if (ids.length <= 1) return;
@@ -1488,9 +1656,16 @@ export default function GeneratorApp({ userEmail, onLogout }) {
       delete next[id];
       return next;
     });
+    deleteUserBrand(userId, id).then((ok) => {
+      if (!ok) {
+        setStorageError(
+          `"${expected}" was removed here, but couldn't be deleted from your account. It may reappear next time you sign in — try deleting it again.`
+        );
+      }
+    });
     closeBrandDeleteModal();
     if (activeBrand === id) {
-      const fallbackBrand = remainingAfter.includes("theia") ? "theia" : remainingAfter[0];
+      const fallbackBrand = remainingAfter[0];
       if (fallbackBrand) handleBrandChange(fallbackBrand);
     }
   }, [
@@ -1500,6 +1675,7 @@ export default function GeneratorApp({ userEmail, onLogout }) {
     brands,
     closeBrandDeleteModal,
     handleBrandChange,
+    userId,
   ]);
 
   const countPaletteReferences = useCallback((brandData, paletteName) => {
@@ -1600,6 +1776,9 @@ export default function GeneratorApp({ userEmail, onLogout }) {
   const paletteDeleteUsageSummary = countPaletteReferences(brand, paletteDeleteTargetName);
 
   const brandNames = Object.keys(brands);
+  const brandLabels = Object.fromEntries(
+    brandNames.map((id) => [id, brands[id]?.name || id])
+  );
   const allColorTokens = getColorTokens(activeComponent);
   // Charts expose two mutually-exclusive color sets: the series palette
   // (single/palette modes) and the dedicated shade ramp (shades mode). Only show
@@ -1656,6 +1835,31 @@ export default function GeneratorApp({ userEmail, onLogout }) {
     }
   }, [brands, activeBrand, previewTheme]);
 
+  // Durable per-user autosave to Supabase (debounced). Gated until the initial
+  // Supabase load/seed has resolved so pre-hydration state (the localStorage
+  // snapshot or demo data) can never overwrite a user's real rows.
+  useEffect(() => {
+    if (!userId) return;
+    if (!supabaseLoadedRef.current) return;
+    if (supabaseSaveTimerRef.current) clearTimeout(supabaseSaveTimerRef.current);
+    supabaseSaveTimerRef.current = setTimeout(() => {
+      Promise.all(
+        Object.entries(brands).map(([brandKey, brandData]) =>
+          upsertUserBrand(userId, brandKey, brandData?.name || brandKey, brandData)
+        )
+      ).then((results) => {
+        if (results.some((ok) => !ok)) {
+          setStorageError(
+            "Some changes could not be saved to your account (cloud sync failed). They're still saved in this browser — try again or export your brands to avoid losing work."
+          );
+        }
+      });
+    }, 600);
+    return () => {
+      if (supabaseSaveTimerRef.current) clearTimeout(supabaseSaveTimerRef.current);
+    };
+  }, [brands, userId]);
+
   // On startup, restore from the on-disk autosave when it's newer than (or
   // localStorage is empty for) this origin. This is what makes colors survive a
   // port change or browser clear — the disk file is origin-independent.
@@ -1665,7 +1869,7 @@ export default function GeneratorApp({ userEmail, onLogout }) {
     (async () => {
       let adopted = false;
       try {
-        const res = await fetch(`${RELAY_HTTP}/api/brands`);
+        const res = await fetch(`${RELAY_HTTP}/api/brands`, { headers: RELAY_AUTH_HEADERS });
         const data = res.ok ? await res.json() : null;
         if (!cancelled && data && !data.missing && data.brands && typeof data.brands === "object") {
           const localAt = initialLocalRef.current.savedAt;
@@ -1700,6 +1904,58 @@ export default function GeneratorApp({ userEmail, onLogout }) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Load this user's brands from Supabase (the durable, cross-device source of
+  // truth). If rows already exist, they win over whatever localStorage/disk
+  // produced above. If none exist yet (every account right now, since the
+  // brands table was just recreated), self-heal by seeding from the brand
+  // name(s) the user typed during onboarding, then persist that seed
+  // immediately so it's there on next login too.
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    (async () => {
+      const rows = await fetchUserBrands(userId);
+      if (cancelled) return;
+      if (rows === null) {
+        // Supabase unreachable/error — keep whatever localStorage/disk produced.
+        supabaseLoadedRef.current = true;
+        return;
+      }
+      if (rows.length > 0) {
+        const hydrated = {};
+        rows.forEach((row) => {
+          hydrated[row.brand_key] = row.data;
+        });
+        // No mergeRecoveredBrands here: that helper unconditionally spreads the
+        // committed demo STORYBOOK_BRANDS snapshot underneath, which would
+        // permanently reintroduce Theia/Hyperion/etc. into every signed-in
+        // user's brand set. Supabase rows are authoritative on their own.
+        setBrands(enforceTextDefaultMappings(hydrated));
+        const firstId = Object.keys(hydrated)[0];
+        if (firstId) setActiveBrand((prev) => (hydrated[prev] ? prev : firstId));
+      } else {
+        const seeded = seedBrandsFromOnboarding(onboardingAnswers, userEmail);
+        setBrands(enforceTextDefaultMappings(seeded));
+        const seededIds = Object.keys(seeded);
+        if (seededIds.length > 0) setActiveBrand(seededIds[0]);
+        Promise.all(
+          seededIds.map((id) => upsertUserBrand(userId, id, seeded[id].name, seeded[id]))
+        ).then((results) => {
+          if (results.some((ok) => !ok)) {
+            setStorageError(
+              "Your new brand could not be saved to your account yet. It's available in this browser — try refreshing once you're back online."
+            );
+          }
+        });
+      }
+      supabaseLoadedRef.current = true;
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   // Keep multiple open tabs in sync. Without this, a stale second tab will
   // overwrite a fresh tab's saved edits on its next write, which looks exactly
@@ -2814,9 +3070,9 @@ export default function GeneratorApp({ userEmail, onLogout }) {
     setStorybookLoading(true);
     setStorybookError(null);
     try {
-      const response = await fetch("http://localhost:9001/api/launch-storybook", {
+      const response = await fetch(`${RELAY_HTTP}/api/launch-storybook`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...RELAY_AUTH_HEADERS },
         body: JSON.stringify({ brands, globalPrimitives: GLOBAL_PRIMITIVES }),
       });
       if (!response.ok) {
@@ -2885,6 +3141,34 @@ export default function GeneratorApp({ userEmail, onLogout }) {
         </div>
       )}
       <Modal
+        opened={brandRenameModalOpened}
+        onClose={closeBrandRenameModal}
+        title="Rename brand"
+        centered
+        overlayProps={{ backgroundOpacity: 0.55 }}
+      >
+        <Stack gap="md">
+          <TextInput
+            label="Brand name"
+            value={brandRenameInput}
+            onChange={(e) => setBrandRenameInput(e.currentTarget.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && canSubmitBrandRename) executeBrandRename();
+            }}
+            autoComplete="off"
+            data-autofocus
+          />
+          <Group justify="flex-end" mt="xs">
+            <Button variant="default" onClick={closeBrandRenameModal}>
+              Cancel
+            </Button>
+            <Button disabled={!canSubmitBrandRename} onClick={executeBrandRename}>
+              Save name
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+      <Modal
         opened={brandDeleteModalOpened}
         onClose={closeBrandDeleteModal}
         title="Delete brand"
@@ -2893,7 +3177,7 @@ export default function GeneratorApp({ userEmail, onLogout }) {
       >
         <Stack gap="md">
           <Text size="sm" c="dimmed">
-            This removes the brand from this browser (including saved local data). You cannot undo it.
+            This permanently removes the brand and its saved data. You cannot undo it.
           </Text>
           <Text size="sm">
             Type the brand name{" "}
@@ -3041,12 +3325,57 @@ export default function GeneratorApp({ userEmail, onLogout }) {
               options={brandNames}
               value={activeBrand}
               displayValue={brand.name}
+              labels={brandLabels}
               onChange={handleBrandChange}
               placeholder="Search brands..."
               onAdd={addBrand}
               addLabel="+ New brand"
               addPlaceholder="Brand name..."
             />
+            <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
+              <button
+                type="button"
+                onClick={openBrandRenameModal}
+                style={{
+                  flex: 1,
+                  display: "block",
+                  width: "100%",
+                  padding: "8px 10px",
+                  fontSize: 12,
+                  fontFamily: "monospace",
+                  fontWeight: 600,
+                  color: "#4DABF7",
+                  background: "transparent",
+                  border: "1px solid #2C4A63",
+                  borderRadius: 6,
+                  cursor: "pointer",
+                }}
+              >
+                Rename this brand…
+              </button>
+              <button
+                type="button"
+                onClick={openBrandDeleteModal}
+                disabled={brandNames.length <= 1}
+                title={brandNames.length <= 1 ? "Keep at least one brand" : "Delete the selected brand"}
+                style={{
+                  flex: 1,
+                  display: "block",
+                  width: "100%",
+                  padding: "8px 10px",
+                  fontSize: 12,
+                  fontFamily: "monospace",
+                  fontWeight: 600,
+                  color: brandNames.length <= 1 ? "#5C5F66" : "#FA5252",
+                  background: brandNames.length <= 1 ? "#1A1B1E" : "transparent",
+                  border: `1px solid ${brandNames.length <= 1 ? "#2C2E33" : "#862E2E"}`,
+                  borderRadius: 6,
+                  cursor: brandNames.length <= 1 ? "not-allowed" : "pointer",
+                }}
+              >
+                Delete this brand…
+              </button>
+            </div>
             <div
               style={{
                 marginTop: 8,
@@ -3058,28 +3387,6 @@ export default function GeneratorApp({ userEmail, onLogout }) {
               New brands start with no brand color palettes — semantics point at shared global primitives until you add
               your own (e.g. blue) with + Add color, then map tokens to those names.
             </div>
-            <button
-              type="button"
-              onClick={openBrandDeleteModal}
-              disabled={brandNames.length <= 1}
-              title={brandNames.length <= 1 ? "Keep at least one brand" : "Delete the selected brand"}
-              style={{
-                marginTop: 10,
-                display: "block",
-                width: "100%",
-                padding: "8px 10px",
-                fontSize: 12,
-                fontFamily: "monospace",
-                fontWeight: 600,
-                color: brandNames.length <= 1 ? "#5C5F66" : "#FA5252",
-                background: brandNames.length <= 1 ? "#1A1B1E" : "transparent",
-                border: `1px solid ${brandNames.length <= 1 ? "#2C2E33" : "#862E2E"}`,
-                borderRadius: 6,
-                cursor: brandNames.length <= 1 ? "not-allowed" : "pointer",
-              }}
-            >
-              Delete this brand…
-            </button>
             <div style={{ marginTop: 20 }} />
             <Section title={`Primitives — ${brand.name}`}>
               {colorNames.map((c) => (

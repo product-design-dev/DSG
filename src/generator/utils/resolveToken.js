@@ -2,6 +2,14 @@ import { COMPONENT_TOKENS, TOKEN_TYPES } from "../data/componentTokens";
 import { GLOBAL_PRIMITIVES, BRAND_STARTER_SEMANTIC_MAP } from "../data/brands";
 import { gradientFirstStopHex } from "./resolveGradient";
 
+// #FF00FF marks an unresolved color token so it's impossible to miss in the
+// UI; this pairs that with a console warning so the cause isn't silent too —
+// previously it was just a magenta swatch with no diagnostic trail.
+function missingTokenColor(context) {
+  console.warn(`[DSG] Unresolved color token (${context}) — showing #FF00FF placeholder.`);
+  return "#FF00FF";
+}
+
 function isValidSemanticMapping(m) {
   return (
     m != null &&
@@ -231,7 +239,7 @@ export function chartShadeColors(brands, brandId, theme, count) {
   const n = Math.max(1, Number(count) || 1);
   return pickShadeIndices(n).map((i) => {
     const idx = Math.max(0, Math.min(ramp.length - 1, i));
-    return ramp[idx] || "#FF00FF";
+    return ramp[idx] || missingTokenColor(`chart shade ramp, family "${family}", index ${idx}`);
   });
 }
 
@@ -273,16 +281,16 @@ export function chartShadeOpacityMappingForToken(brand, tokenName) {
   return chartShadeMappingForToken(brand, "chart-shade-" + m[1]);
 }
 
-function mappingToHex(brand, mapping) {
-  if (!mapping) return "#FF00FF";
+export function mappingToHex(brand, mapping) {
+  if (!mapping) return missingTokenColor("mappingToHex called with no mapping");
   if (mapping.gradient && String(mapping.gradient).trim()) {
     const g = gradientFirstStopHex(brand, String(mapping.gradient).trim());
-    return g || "#FF00FF";
+    return g || missingTokenColor(`gradient "${mapping.gradient}" has no resolvable first stop`);
   }
   if (mapping.color === "transparent") return "transparent";
   const base = brand.primitives[mapping.color]?.[mapping.index]
     ?? GLOBAL_PRIMITIVES[mapping.color]?.[mapping.index]
-    ?? "#FF00FF";
+    ?? missingTokenColor(`primitive "${mapping.color}[${mapping.index}]" not found`);
   return applyOpacity(base, mapping.opacity);
 }
 
@@ -330,8 +338,20 @@ export function resolveColor(brands, brandId, semanticKey, theme = "light", comp
   const map =
     activeTheme === "dark" ? mergeDarkSemanticsForBrand(brand) : mergeLightSemanticsForBrand(brand);
   const mapping = map[semanticKey];
-  if (!mapping) return "#FF00FF";
+  if (!mapping) return missingTokenColor(`semantic key "${semanticKey}" (component token "${componentToken}")`);
   return mappingToHex(brand, mapping);
+}
+
+/**
+ * Resolves the first token key (in priority order) that exists in `tokens`,
+ * falling back through the list — e.g. a per-state token, then a per-variant
+ * token, then a generic default. Shared by preview components (Checkbox,
+ * Chip, Radio) that previously each redefined this identically.
+ */
+export function resolveFirstColor(tokens, brands, brandId, tokenKeys) {
+  const key = tokenKeys.find((k) => tokens[k]);
+  if (!key) return missingTokenColor(`none of [${tokenKeys.join(", ")}] found in tokens`);
+  return resolveColor(brands, brandId, tokens[key]?.semantic, "light", key);
 }
 
 export function resolveDimension(brands, brandId, tokenName, size) {

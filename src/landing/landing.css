@@ -74,14 +74,18 @@ html {
   margin-bottom: 12px;
 }
 
-.section-title {
+/* Scoped under .section-header (not just .section-title/.section-subtitle
+   alone) so they outrank the ".landing :is(h1,h2,h3,p) { margin: 0 }" reset
+   in marketing/theme.css, which is a compound selector and otherwise wins on
+   specificity — same fix as .hero-section .hero-title/.hero-subtitle above. */
+.section-header .section-title {
   font-size: 34px;
   font-weight: 600;
   letter-spacing: -0.02em;
   margin-bottom: 12px;
 }
 
-.section-subtitle {
+.section-header .section-subtitle {
   color: var(--text-secondary);
   max-width: 560px;
   margin: 0 auto;
@@ -168,7 +172,10 @@ html {
   margin-bottom: 24px;
 }
 
-.hero-title {
+/* Selectors scoped under .hero-section (not just .hero-title/.hero-subtitle
+   alone) so they outrank the ".landing :is(h1,h2,h3,p) { margin: 0 }" reset,
+   which is a compound selector and otherwise wins on specificity. */
+.hero-section .hero-title {
   font-size: 52px;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -177,7 +184,7 @@ html {
   margin: 0 auto 20px;
 }
 
-.hero-subtitle {
+.hero-section .hero-subtitle {
   font-size: 18px;
   color: var(--text-secondary);
   max-width: 580px;

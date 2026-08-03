@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "relay": "node server/index.js",
     "tokens:lock": "vite-node scripts/build-token-lock.mjs",
+    "check:figma-plugin-sync": "vite-node scripts/check-figma-plugin-sync.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

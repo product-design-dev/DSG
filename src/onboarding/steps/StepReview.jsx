@@ -1,6 +1,6 @@
 import { BRAND_MODES, LIBRARIES, resolveArchitecture, stepIndexOf } from '../content'
 
-export default function StepReview({ answers, onEdit, onLaunch }) {
+export default function StepReview({ answers, onEdit, onLaunch, launching, launchError }) {
   const brand = BRAND_MODES.find((b) => b.key === answers.brandMode)
   const arch = resolveArchitecture(answers)
   const lib = LIBRARIES.find((l) => l.key === answers.library)
@@ -59,8 +59,14 @@ export default function StepReview({ answers, onEdit, onLaunch }) {
         </div>
       </div>
 
-      <button type="button" className="btn btn-primary btn-large" onClick={onLaunch}>
-        Create my design system
+      {launchError && (
+        <p className="step-subtitle" style={{ color: 'var(--danger)' }}>
+          {launchError}
+        </p>
+      )}
+
+      <button type="button" className="btn btn-primary btn-large" onClick={onLaunch} disabled={launching}>
+        {launching ? 'Creating your design system…' : 'Create my design system'}
       </button>
     </div>
   )

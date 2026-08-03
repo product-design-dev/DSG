@@ -30,14 +30,23 @@ function App() {
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("[DSG] Sign out failed:", error);
+      window.alert("Could not log out — please check your connection and try again.");
+      return;
+    }
     setShowAuth(false);
   };
 
+  // Throws on failure so callers (the onboarding "Create my design system"
+  // button) can keep the user on the review step and let them retry, instead
+  // of assuming success and advancing to a screen that never loads.
   const markOnboardingComplete = async (answers) => {
-    await supabase.auth.updateUser({
+    const { error } = await supabase.auth.updateUser({
       data: { onboarding_complete: true, onboarding_answers: answers },
     });
+    if (error) throw error;
   };
 
   if (session === undefined) {
@@ -65,7 +74,12 @@ function App() {
   );
 
   return onboardingComplete ? (
-    <GeneratorApp userEmail={session.user.email} onLogout={handleLogout} />
+    <GeneratorApp
+      userEmail={session.user.email}
+      userId={session.user.id}
+      onboardingAnswers={session.user.user_metadata?.onboarding_answers || null}
+      onLogout={handleLogout}
+    />
   ) : (
     <OnboardingFlow
       onLaunch={markOnboardingComplete}

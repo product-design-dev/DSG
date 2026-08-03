@@ -647,7 +647,6 @@ export const COMPONENT_TOKENS = {
 
     // ── FLOAT TOKENS (size variants: xs, sm, md, lg, xl) ──
     "checkbox-size":              { type: "FLOAT", unit: "px", sizes: { xs: 16, sm: 18, md: 20, lg: 24, xl: 28 },           figmaPath: "checkbox/size" },
-    "checkbox-border-radius":     { type: "FLOAT", unit: "px", sizes: { xs: 4,  sm: 4,  md: 5,  lg: 6,  xl: 7 },            figmaPath: "checkbox/border-radius" },
     "checkbox-radius":            { type: "FLOAT", unit: "px", sizes: { xs: 2, sm: 4, md: 8, lg: 16, xl: 32 },              figmaPath: "checkbox/radius" },
     "checkbox-icon-size":         { type: "FLOAT", unit: "px", sizes: { xs: 10, sm: 12, md: 14, lg: 16, xl: 18 },           figmaPath: "checkbox/icon-size" },
     "checkbox-icon-stroke-width": { type: "FLOAT", unit: "px", sizes: { xs: 1.25, sm: 1.5, md: 1.75, lg: 2, xl: 2.25 },     figmaPath: "checkbox/icon-stroke-width" },
@@ -2585,6 +2584,9 @@ const PLACEHOLDER_COMPONENTS = [
 const CHART_PLACEHOLDER_COMPONENTS = [];
 export const CHART_COMPONENTS = ["chart", "chart-line", "chart-time-series", "chart-time-series-dual-axis", "chart-area", "chart-stacked-area", "chart-stacked-bar", "chart-combo", "chart-donut", "chart-radar", "chart-scatter", "chart-candlestick", "chart-sparkline", "chart-bar-horizontal", "chart-pie", "chart-funnel", "chart-radial", ...CHART_PLACEHOLDER_COMPONENTS];
 
+// figma-plugin/code.js hand-maintains a copy of this list (managedKeys) since
+// it can't import this file directly. Run `npm run check:figma-plugin-sync`
+// after adding/removing a component here.
 export const COMPONENT_NAMES = [
   ...new Set([
     ...Object.keys(COMPONENT_TOKENS),

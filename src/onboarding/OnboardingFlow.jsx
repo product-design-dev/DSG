@@ -40,6 +40,8 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
   const [stepIndex, setStepIndex] = useState(0)
   const [answers, setAnswers] = useState(initialAnswers)
   const [launched, setLaunched] = useState(false)
+  const [launching, setLaunching] = useState(false)
+  const [launchError, setLaunchError] = useState(null)
 
   const step = STEPS[stepIndex]
 
@@ -67,6 +69,28 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
     setAnswers(initialAnswers)
     setStepIndex(0)
     setLaunched(false)
+  }
+
+  // Awaits onLaunch (persists onboarding_complete to Supabase) before
+  // committing to the "launched" screen. Previously this fired onLaunch
+  // without waiting and switched screens immediately, so a slow or failed
+  // save left the user on a blank screen with no way back.
+  async function handleLaunch() {
+    if (!onLaunch) {
+      setLaunched(true)
+      return
+    }
+    setLaunching(true)
+    setLaunchError(null)
+    try {
+      await onLaunch(answers)
+      setLaunched(true)
+    } catch (err) {
+      console.error('[DSG] Failed to complete onboarding:', err)
+      setLaunchError('Something went wrong creating your design system. Please try again.')
+    } finally {
+      setLaunching(false)
+    }
   }
 
   if (launched) {
@@ -118,10 +142,9 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
           <StepReview
             answers={answers}
             onEdit={goTo}
-            onLaunch={() => {
-              setLaunched(true)
-              onLaunch?.(answers)
-            }}
+            onLaunch={handleLaunch}
+            launching={launching}
+            launchError={launchError}
           />
         )}
       </main>

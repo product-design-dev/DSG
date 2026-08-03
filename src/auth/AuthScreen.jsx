@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { supabase } from "./supabaseClient";
 import { PasswordField } from "./PasswordField";
 import "./auth.css";
@@ -13,6 +13,11 @@ export function AuthScreen() {
   const [authError, setAuthError] = useState("");
   const [authNotice, setAuthNotice] = useState("");
   const [resetSent, setResetSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  // Mirrors `submitting` but updates synchronously, unlike React state (which
+  // batches and hasn't committed yet if the same handler fires more than once
+  // in the same tick — e.g. a mashed/double-clicked submit button).
+  const submittingRef = useRef(false);
 
   const resetAuthFields = () => {
     setEmail("");
@@ -24,83 +29,99 @@ export function AuthScreen() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setAuthError("");
     setAuthNotice("");
-    if (authMode === "signup") {
-      if (!firstName.trim() || !lastName.trim()) {
-        setAuthError("Please enter your first and last name.");
-        return;
-      }
-      if (password.length < 6) {
-        setAuthError("Password must be at least 6 characters.");
-        return;
-      }
-      if (password !== confirmPassword) {
-        setAuthError("Passwords do not match.");
-        return;
-      }
+    setSubmitting(true);
+    try {
+      if (authMode === "signup") {
+        if (!firstName.trim() || !lastName.trim()) {
+          setAuthError("Please enter your first and last name.");
+          return;
+        }
+        if (password.length < 6) {
+          setAuthError("Password must be at least 6 characters.");
+          return;
+        }
+        if (password !== confirmPassword) {
+          setAuthError("Passwords do not match.");
+          return;
+        }
 
-      const { data: signUpData, error: signUpError } =
-        await supabase.auth.signUp({
+        const { data: signUpData, error: signUpError } =
+          await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              data: { first_name: firstName, last_name: lastName },
+            },
+          });
+        if (signUpError) {
+          console.error(
+            `Error signing up (status ${signUpError.status}):`,
+            signUpError,
+          );
+          setAuthError(
+            signUpError.status >= 500
+              ? "Server error while signing up. Check Supabase Auth logs."
+              : signUpError.message,
+          );
+          return;
+        }
+        if (signUpData.user?.identities?.length === 0) {
+          setAuthError(
+            "An account with this email already exists. Try logging in or resetting your password.",
+          );
+          return;
+        }
+        if (!signUpData.session) {
+          resetAuthFields();
+          setAuthMode("login");
+          setAuthNotice(
+            "Account created! Check your email to confirm your account before logging in.",
+          );
+          return;
+        }
+      } else {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
-          options: {
-            data: { first_name: firstName, last_name: lastName },
-          },
         });
-      if (signUpError) {
-        console.error(
-          `Error signing up (status ${signUpError.status}):`,
-          signUpError,
-        );
-        setAuthError(
-          signUpError.status >= 500
-            ? "Server error while signing up. Check Supabase Auth logs."
-            : signUpError.message,
-        );
-        return;
+        if (signInError) {
+          console.error("Error signing in:", signInError.message);
+          setAuthError(signInError.message);
+          return;
+        }
       }
-      if (signUpData.user?.identities?.length === 0) {
-        setAuthError(
-          "An account with this email already exists. Try logging in or resetting your password.",
-        );
-        return;
-      }
-      if (!signUpData.session) {
-        resetAuthFields();
-        setAuthMode("login");
-        setAuthNotice(
-          "Account created! Check your email to confirm your account before logging in.",
-        );
-        return;
-      }
-    } else {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (signInError) {
-        console.error("Error signing in:", signInError.message);
-        setAuthError(signInError.message);
-        return;
-      }
+      resetAuthFields();
+    } finally {
+      submittingRef.current = false;
+      setSubmitting(false);
     }
-    resetAuthFields();
   };
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setAuthError("");
     setResetSent(false);
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin,
-    });
-    if (error) {
-      console.error("Error requesting password reset:", error.message);
-      setAuthError(error.message);
-      return;
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin,
+      });
+      if (error) {
+        console.error("Error requesting password reset:", error.message);
+        setAuthError(error.message);
+        return;
+      }
+      setResetSent(true);
+    } finally {
+      submittingRef.current = false;
+      setSubmitting(false);
     }
-    setResetSent(true);
   };
 
   if (authMode === "forgot") {
@@ -113,6 +134,7 @@ export function AuthScreen() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
             required
           />
           {authError && <p className="auth-error">{authError}</p>}
@@ -121,7 +143,9 @@ export function AuthScreen() {
               Check your email for a password reset link.
             </p>
           )}
-          <button type="submit">Send Reset Link</button>
+          <button type="submit" disabled={submitting}>
+            {submitting ? "Sending…" : "Send Reset Link"}
+          </button>
         </form>
         <button
           type="button"
@@ -150,6 +174,7 @@ export function AuthScreen() {
               placeholder="First Name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              autoComplete="given-name"
               required
             />
             <input
@@ -157,6 +182,7 @@ export function AuthScreen() {
               placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              autoComplete="family-name"
               required
             />
           </div>
@@ -166,22 +192,27 @@ export function AuthScreen() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
           required
         />
         <PasswordField
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete={isSignUp ? "new-password" : "current-password"}
         />
         {isSignUp && (
           <PasswordField
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm Password"
+            autoComplete="new-password"
           />
         )}
         {authError && <p className="auth-error">{authError}</p>}
         {authNotice && <p className="auth-success">{authNotice}</p>}
-        <button type="submit">{isSignUp ? "Sign Up" : "Log In"}</button>
+        <button type="submit" disabled={submitting}>
+          {submitting ? (isSignUp ? "Signing up…" : "Logging in…") : isSignUp ? "Sign Up" : "Log In"}
+        </button>
       </form>
       {!isSignUp && (
         <button

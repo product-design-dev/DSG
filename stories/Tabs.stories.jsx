@@ -10,19 +10,24 @@ const VARIANT_MAP = {
 
 function buildCode(args) {
   const mantineVariant = VARIANT_MAP[args.variant] || "default";
-  const iconImports = args.showIcons
+  const showIcons = args.showLeftIcon || args.showRightIcon;
+  const iconImports = showIcons
     ? `import Image01Icon from "@untitledui-icons/react/line/Image01Icon";
 import MessageCircle01Icon from "@untitledui-icons/react/line/MessageCircle01Icon";
 import Settings01Icon from "@untitledui-icons/react/line/Settings01Icon";
 `
     : "";
-  const tabLines = args.showIcons
-    ? `    <Tabs.Tab value="overview" leftSection={<Image01Icon size={14} />}>Overview</Tabs.Tab>
-    <Tabs.Tab value="details" leftSection={<MessageCircle01Icon size={14} />}>Details</Tabs.Tab>
-    <Tabs.Tab value="settings" leftSection={<Settings01Icon size={14} />}>Settings</Tabs.Tab>`
-    : `    <Tabs.Tab value="overview">Overview</Tabs.Tab>
-    <Tabs.Tab value="details">Details</Tabs.Tab>
-    <Tabs.Tab value="settings">Settings</Tabs.Tab>`;
+  const sectionProps = (iconTag) =>
+    [
+      args.showLeftIcon ? `leftSection={<${iconTag} size={14} />}` : null,
+      args.showRightIcon ? `rightSection={<${iconTag} size={14} />}` : null,
+    ]
+      .filter(Boolean)
+      .map((p) => ` ${p}`)
+      .join("");
+  const tabLines = `    <Tabs.Tab value="overview"${sectionProps("Image01Icon")}>Overview</Tabs.Tab>
+    <Tabs.Tab value="details"${sectionProps("MessageCircle01Icon")}>Details</Tabs.Tab>
+    <Tabs.Tab value="settings"${sectionProps("Settings01Icon")}>Settings</Tabs.Tab>`;
   const panelLines = args.showPanel
     ? `
   <Tabs.Panel value="overview">Overview content</Tabs.Panel>
@@ -55,7 +60,8 @@ export default {
     radius: { control: "select", options: ["xs", "sm", "md", "lg", "xl"] },
     orientation: { control: "select", options: ["horizontal", "vertical"] },
     showPanel: { control: "boolean" },
-    showIcons: { control: "boolean" },
+    showLeftIcon: { control: "boolean" },
+    showRightIcon: { control: "boolean" },
     interactive: { control: "boolean" },
     disabled: { control: "boolean" },
   },
@@ -64,7 +70,8 @@ export default {
     radius: "sm",
     orientation: "horizontal",
     showPanel: false,
-    showIcons: false,
+    showLeftIcon: false,
+    showRightIcon: false,
     interactive: false,
     disabled: false,
   },
@@ -77,7 +84,8 @@ export default {
         radius={args.radius}
         orientation={args.orientation}
         showPanel={args.showPanel}
-        showIcons={args.showIcons}
+        showLeftIcon={args.showLeftIcon}
+        showRightIcon={args.showRightIcon}
         interactive={args.interactive}
         state={args.disabled ? "disabled" : null}
       />

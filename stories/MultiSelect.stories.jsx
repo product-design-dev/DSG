@@ -12,8 +12,6 @@ function buildCode(args) {
   if (args.withAsterisk && args.showLabel) props.push("  withAsterisk");
   if (args.showError && args.errorText) props.push(`  error="${args.errorText}"`);
   props.push(`  placeholder="${args.placeholder || "Pick options"}"`);
-  if (args.searchable) props.push("  searchable");
-  if (args.clearable) props.push("  clearable");
   if (args.disabled) props.push("  disabled");
 
   return `import { MultiSelect } from "@mantine/core";
@@ -38,8 +36,6 @@ export default {
     showError: { control: "boolean" },
     errorText: { control: "text" },
     placeholder: { control: "text" },
-    searchable: { control: "boolean" },
-    clearable: { control: "boolean" },
     disabled: { control: "boolean" },
   },
   args: {
@@ -52,8 +48,6 @@ export default {
     showError: false,
     errorText: "Error message",
     placeholder: "Pick options",
-    searchable: false,
-    clearable: false,
     disabled: false,
   },
   render: (args, { globals }) => (
@@ -74,4 +68,3 @@ export const Default = { args: { variant: "default" } };
 export const Filled = { args: { variant: "filled" } };
 export const WithError = { args: { showError: true, errorText: "This field is required" } };
 export const Disabled = { args: { disabled: true } };
-export const Searchable = { args: { searchable: true } };

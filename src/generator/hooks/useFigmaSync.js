@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-
-const WS_URL = "ws://localhost:9001";
+import { RELAY_WS as WS_URL } from "../relayConfig";
 
 export function useFigmaSync() {
   const [status, setStatus] = useState("disconnected");

@@ -1,6 +1,7 @@
 import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { spawn } from "child_process";
+import { randomBytes } from "crypto";
 import { writeFileSync, readFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
@@ -10,6 +11,34 @@ const PROJECT_ROOT = join(__dirname, "..");
 
 const PORT = 9001;
 const STORYBOOK_PORT = 6006;
+
+// Shared secret required on every request below. Read from .env so the same
+// value is available to the Vite app as VITE_RELAY_TOKEN; generated and
+// persisted into .env on first run so nothing needs to be configured by hand.
+// Without this, any web page open in the developer's browser could read or
+// overwrite brands.local.json / tokens.lock.json via this locally-bound port.
+function ensureRelayToken() {
+  const envPath = join(PROJECT_ROOT, ".env");
+  try {
+    process.loadEnvFile(envPath);
+  } catch {
+    // .env doesn't exist yet — created below.
+  }
+  if (process.env.VITE_RELAY_TOKEN) return process.env.VITE_RELAY_TOKEN;
+
+  const token = randomBytes(24).toString("hex");
+  const existing = existsSync(envPath) ? readFileSync(envPath, "utf-8") : "";
+  const separator = existing && !existing.endsWith("\n") ? "\n" : "";
+  writeFileSync(envPath, `${existing}${separator}VITE_RELAY_TOKEN=${token}\n`, "utf-8");
+  console.log("[relay] Generated VITE_RELAY_TOKEN in .env — restart `npm run dev` to pick it up.");
+  return token;
+}
+
+const RELAY_TOKEN = ensureRelayToken();
+
+function isAuthorized(req) {
+  return req.headers["x-relay-token"] === RELAY_TOKEN;
+}
 
 // ---------------------------------------------------------------------------
 // HTTP server (handles REST endpoints + upgrades to WebSocket)
@@ -22,11 +51,17 @@ const server = createServer((req, res) => {
   // CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Relay-Token");
 
   if (req.method === "OPTIONS") {
     res.writeHead(204);
     res.end();
+    return;
+  }
+
+  if (req.url.startsWith("/api/") && !isAuthorized(req)) {
+    res.writeHead(401, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Missing or invalid X-Relay-Token" }));
     return;
   }
 

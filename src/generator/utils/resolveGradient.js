@@ -64,6 +64,10 @@ export function resolvePrimitiveHex(brand, colorName, index) {
       ? "transparent"
       : String(raw).trim();
   }
+  // #FF00FF marks an unresolved primitive so it's impossible to miss in the
+  // UI; warn too so the cause isn't silent (see resolveToken.js's
+  // missingTokenColor for the same pattern).
+  console.warn(`[DSG] Unresolved color token (primitive "${colorName}[${idx}]" not found) — showing #FF00FF placeholder.`);
   return "#FF00FF";
 }
 
