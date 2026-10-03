@@ -408,6 +408,41 @@ function enforceTextDefaultMappings(brandsInput) {
     }
   });
 
+  // Correct legacy component-size defaults. These were originally seeded
+  // with inconsistent "sm"/"md" values; every component whose Size/Radius
+  // picker actually offers a "Default" option should start on "default" —
+  // only Tabs has no "Default" choice, so it stays "md". Fixing this at the
+  // brand-seed-template level alone (brands.js) never reaches brands that
+  // were already persisted — on disk, in localStorage, or (authoritative
+  // above all of those once it exists) a signed-in user's Supabase `brands`
+  // row. This runs on every brand-load path in the app, so it's the one
+  // place this correction actually takes effect everywhere.
+  //
+  // Also backfill any key missing entirely (e.g. a brand created before a
+  // component existed, or whose seed never covered it) using the full set
+  // of keys from every brand combined — Theia/Hyperion are maintained as
+  // the complete reference set, but this works even if a key only ever
+  // existed on some other brand.
+  const allComponentDefaultKeys = new Set();
+  Object.values(next).forEach((brand) => {
+    if (brand && brand.componentDefaults && typeof brand.componentDefaults === "object") {
+      Object.keys(brand.componentDefaults).forEach((key) => allComponentDefaultKeys.add(key));
+    }
+  });
+  Object.keys(next).forEach((brandId) => {
+    if (!next[brandId].componentDefaults || typeof next[brandId].componentDefaults !== "object") {
+      next[brandId].componentDefaults = {};
+    }
+    const componentDefaults = next[brandId].componentDefaults;
+    allComponentDefaultKeys.forEach((key) => {
+      if (componentDefaults[key] === "sm" || componentDefaults[key] === "md") {
+        componentDefaults[key] = key.startsWith("tabs") ? "md" : "default";
+      } else if (!(key in componentDefaults)) {
+        componentDefaults[key] = key.startsWith("tabs") ? "md" : "default";
+      }
+    });
+  });
+
   // Backfill feedback-warning for persisted brands (Text success/warning/error colors).
   Object.keys(next).forEach((brandId) => {
     const b = next[brandId];
@@ -783,47 +818,55 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
     : (colorNames[0] || globalColorNames[0] || "neutral");
   const sizeKeys = COMPONENT_SIZE_KEYS[activeComponent] || [];
 
-  // Derive default size per component from brand data
-  const buttonDefault = getComponentDefaultSize(brands, activeBrand, "button") || "sm";
-  const actionIconDefault = getComponentDefaultSize(brands, activeBrand, "actionicon") || "sm";
-  const tabsDefault = getComponentDefaultSize(brands, activeBrand, "tabs") || "sm";
-  const switchDefault = getComponentDefaultSize(brands, activeBrand, "switch") || "md";
-  const burgerDefault = getComponentDefaultSize(brands, activeBrand, "burger") || "md";
-  const segmentedControlDefault = getComponentDefaultSize(brands, activeBrand, "segmentedcontrol") || "md";
+  // Derive default size per component from brand data. Falls back to "md"
+  // uniformly when a brand has no saved default — every size-spectrum
+  // component (xs/sm/md/lg/xl) should start on the same size; components
+  // with only a single "default" size (card, pill, badge, image, skeleton)
+  // correctly fall back to "default" instead since they have no "md" option.
+  // Tabs/Slider/RangeSlider have no "Default" entry in their own picker at
+  // all (COMPONENT_SIZE_KEYS has no "default" for them, and their panels
+  // don't synthesize one), so "md" is the right fallback for those three —
+  // every other component below does present a real "Default" option.
+  const buttonDefault = getComponentDefaultSize(brands, activeBrand, "button") || "default";
+  const actionIconDefault = getComponentDefaultSize(brands, activeBrand, "actionicon") || "default";
+  const tabsDefault = getComponentDefaultSize(brands, activeBrand, "tabs") || "md";
+  const switchDefault = getComponentDefaultSize(brands, activeBrand, "switch") || "default";
+  const burgerDefault = getComponentDefaultSize(brands, activeBrand, "burger") || "default";
+  const segmentedControlDefault = getComponentDefaultSize(brands, activeBrand, "segmentedcontrol") || "default";
   const sliderDefault = getComponentDefaultSize(brands, activeBrand, "slider") || "md";
   const rangeSliderDefault = getComponentDefaultSize(brands, activeBrand, "rangeslider") || "md";
-  const checkboxDefault = getComponentDefaultSize(brands, activeBrand, "checkbox") || "md";
-  const radioDefault = getComponentDefaultSize(brands, activeBrand, "radio") || "md";
-  const chipDefault = getComponentDefaultSize(brands, activeBrand, "chip") || "md";
-  const textInputDefault = getComponentDefaultSize(brands, activeBrand, "textinput") || "sm";
-  const selectDefault = getComponentDefaultSize(brands, activeBrand, "select") || "sm";
-  const multiSelectDefault = getComponentDefaultSize(brands, activeBrand, "multiselect") || "sm";
+  const checkboxDefault = getComponentDefaultSize(brands, activeBrand, "checkbox") || "default";
+  const radioDefault = getComponentDefaultSize(brands, activeBrand, "radio") || "default";
+  const chipDefault = getComponentDefaultSize(brands, activeBrand, "chip") || "default";
+  const textInputDefault = getComponentDefaultSize(brands, activeBrand, "textinput") || "default";
+  const selectDefault = getComponentDefaultSize(brands, activeBrand, "select") || "default";
+  const multiSelectDefault = getComponentDefaultSize(brands, activeBrand, "multiselect") || "default";
   const cardDefault = getComponentDefaultSize(brands, activeBrand, "card") || "default";
   const pillDefault = getComponentDefaultSize(brands, activeBrand, "pill") || "default";
   const badgeDefault = getComponentDefaultSize(brands, activeBrand, "badge") || "default";
-  const modalDefault = getComponentDefaultSize(brands, activeBrand, "modal") || "md";
+  const modalDefault = getComponentDefaultSize(brands, activeBrand, "modal") || "default";
   const imageDefault = getComponentDefaultSize(brands, activeBrand, "image") || "default";
   const skeletonDefault = getComponentDefaultSize(brands, activeBrand, "skeleton") || "default";
   const skeletonRadiusDefault =
     getDefaultSizeKey(brands, activeBrand, "skeleton-radius") || skeletonDefault;
-  const anchorDefault = getComponentDefaultSize(brands, activeBrand, "anchor") || "md";
-  const textDefault = getComponentDefaultSize(brands, activeBrand, "text") || "md";
+  const anchorDefault = getComponentDefaultSize(brands, activeBrand, "anchor") || "default";
+  const textDefault = getComponentDefaultSize(brands, activeBrand, "text") || "default";
   const progressHeightDefault =
     getDefaultSizeKey(brands, activeBrand, "progress-height") ||
     getComponentDefaultSize(brands, activeBrand, "progress") ||
-    "md";
+    "default";
   const progressRadiusDefault =
-    getDefaultSizeKey(brands, activeBrand, "progress-radius") || "md";
+    getDefaultSizeKey(brands, activeBrand, "progress-radius") || "default";
   const chartSizeDefault =
     getDefaultSizeKey(brands, activeBrand, "chart-width") ||
     getComponentDefaultSize(brands, activeBrand, "chart") ||
-    "md";
+    "default";
   const avatarSizeDefault =
     getDefaultSizeKey(brands, activeBrand, "avatar-size") ||
     getComponentDefaultSize(brands, activeBrand, "avatar") ||
-    "md";
+    "default";
   const avatarRadiusDefault =
-    getDefaultSizeKey(brands, activeBrand, "avatar-radius") || "md";
+    getDefaultSizeKey(brands, activeBrand, "avatar-radius") || "default";
   const avatarColorOptions = ["default", ...availableAvatarColors(brands, activeBrand)];
 
   const [activeSize, setActiveSize] = useState(buttonDefault);
@@ -1051,26 +1094,26 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
   // Sync active sizes when brand changes
   const handleBrandChange = useCallback((newBrand) => {
     setActiveBrand(newBrand);
-    const btnDef = getComponentDefaultSize(brands, newBrand, "button") || "sm";
-    const aiDef = getComponentDefaultSize(brands, newBrand, "actionicon") || "sm";
-    const tbDef = getComponentDefaultSize(brands, newBrand, "tabs") || "sm";
-    const swDef = getComponentDefaultSize(brands, newBrand, "switch") || "md";
-    const bgDef = getComponentDefaultSize(brands, newBrand, "burger") || "md";
-    const scDef = getComponentDefaultSize(brands, newBrand, "segmentedcontrol") || "md";
+    const btnDef = getComponentDefaultSize(brands, newBrand, "button") || "default";
+    const aiDef = getComponentDefaultSize(brands, newBrand, "actionicon") || "default";
+    const tbDef = getComponentDefaultSize(brands, newBrand, "tabs") || "md";
+    const swDef = getComponentDefaultSize(brands, newBrand, "switch") || "default";
+    const bgDef = getComponentDefaultSize(brands, newBrand, "burger") || "default";
+    const scDef = getComponentDefaultSize(brands, newBrand, "segmentedcontrol") || "default";
     const slDef = getComponentDefaultSize(brands, newBrand, "slider") || "md";
     const rslDef = getComponentDefaultSize(brands, newBrand, "rangeslider") || "md";
-    const cbDef = getComponentDefaultSize(brands, newBrand, "checkbox") || "md";
-    const rdDef = getComponentDefaultSize(brands, newBrand, "radio") || "md";
-    const chDef = getComponentDefaultSize(brands, newBrand, "chip") || "md";
+    const cbDef = getComponentDefaultSize(brands, newBrand, "checkbox") || "default";
+    const rdDef = getComponentDefaultSize(brands, newBrand, "radio") || "default";
+    const chDef = getComponentDefaultSize(brands, newBrand, "chip") || "default";
     const caDef = getComponentDefaultSize(brands, newBrand, "card") || "default";
     const piDef = getComponentDefaultSize(brands, newBrand, "pill") || "default";
     const baDef = getComponentDefaultSize(brands, newBrand, "badge") || "default";
-    const moDef = getComponentDefaultSize(brands, newBrand, "modal") || "md";
+    const moDef = getComponentDefaultSize(brands, newBrand, "modal") || "default";
     const imDef = getComponentDefaultSize(brands, newBrand, "image") || "default";
     const skDef = getComponentDefaultSize(brands, newBrand, "skeleton") || "default";
     const skRDef = getDefaultSizeKey(brands, newBrand, "skeleton-radius") || skDef;
-    const anDef = getComponentDefaultSize(brands, newBrand, "anchor") || "md";
-    const txDef = getComponentDefaultSize(brands, newBrand, "text") || "md";
+    const anDef = getComponentDefaultSize(brands, newBrand, "anchor") || "default";
+    const txDef = getComponentDefaultSize(brands, newBrand, "text") || "default";
     setActiveSize(btnDef);
     setActiveActionIconSize(aiDef);
     setActiveActionIconRadius(aiDef);
@@ -1087,9 +1130,9 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
     setActiveRadioSize(rdDef);
     setActiveChipSize(chDef);
     setActiveChipRadius(chDef);
-    const tiDef = getComponentDefaultSize(brands, newBrand, "textinput") || "sm";
-    const seDef = getComponentDefaultSize(brands, newBrand, "select") || "sm";
-    const mseDef = getComponentDefaultSize(brands, newBrand, "multiselect") || "sm";
+    const tiDef = getComponentDefaultSize(brands, newBrand, "textinput") || "default";
+    const seDef = getComponentDefaultSize(brands, newBrand, "select") || "default";
+    const mseDef = getComponentDefaultSize(brands, newBrand, "multiselect") || "default";
     setActiveTextInputSize(tiDef);
     setActiveTextInputRadius(tiDef);
     setActiveSelectSize(seDef);
@@ -1102,15 +1145,15 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
     const prHDef =
       getDefaultSizeKey(brands, newBrand, "progress-height") ||
       getComponentDefaultSize(brands, newBrand, "progress") ||
-      "md";
-    const prRDef = getDefaultSizeKey(brands, newBrand, "progress-radius") || "md";
+      "default";
+    const prRDef = getDefaultSizeKey(brands, newBrand, "progress-radius") || "default";
     setActiveProgressSize(prHDef);
     setActiveProgressRadius(prRDef);
     const avSDef =
       getDefaultSizeKey(brands, newBrand, "avatar-size") ||
       getComponentDefaultSize(brands, newBrand, "avatar") ||
-      "md";
-    const avRDef = getDefaultSizeKey(brands, newBrand, "avatar-radius") || "md";
+      "default";
+    const avRDef = getDefaultSizeKey(brands, newBrand, "avatar-radius") || "default";
     setActiveAvatarSize(avSDef);
     setActiveAvatarRadius(avRDef);
     setActivePillSize(piDef);

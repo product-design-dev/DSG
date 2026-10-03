@@ -495,6 +495,39 @@
           "color": "blue",
           "index": 5,
           "opacity": 10
+        },
+        "actionicon-default-background": {
+          "color": "blue",
+          "index": 5,
+          "opacity": 100
+        },
+        "actionicon-default-border": {
+          "color": "blue",
+          "index": 5,
+          "opacity": 100
+        },
+        "actionicon-focus-ring": {
+          "color": "blue",
+          "index": 5
+        },
+        "actionicon-default-background-hover": {
+          "color": "blue",
+          "index": 6,
+          "opacity": 100
+        },
+        "actionicon-default-border-hover": {
+          "color": "blue",
+          "index": 6,
+          "opacity": 100
+        },
+        "actionicon-default-background-focus": {
+          "color": "blue",
+          "index": 5,
+          "opacity": 100
+        },
+        "actionicon-default-border-focus": {
+          "color": "blue",
+          "index": 5
         }
       }
     },
@@ -6233,9 +6266,9 @@
             "gradientSpec": null
           },
           "dark": {
-            "value": "#000000FF",
-            "alias": "surface-default",
-            "primitiveAlias": "neutral/9",
+            "value": "#006CD7FF",
+            "alias": null,
+            "primitiveAlias": "blue/5",
             "gradientSpec": null
           }
         },
@@ -6251,9 +6284,9 @@
             "gradientSpec": null
           },
           "dark": {
-            "value": "#4D4D4DFF",
-            "alias": "interactive-secondary-hover",
-            "primitiveAlias": "neutral/7",
+            "value": "#0056ACFF",
+            "alias": null,
+            "primitiveAlias": "blue/6",
             "gradientSpec": null
           }
         },
@@ -6269,9 +6302,9 @@
             "gradientSpec": null
           },
           "dark": {
-            "value": "#000000FF",
-            "alias": "surface-default",
-            "primitiveAlias": "neutral/9",
+            "value": "#006CD7FF",
+            "alias": null,
+            "primitiveAlias": "blue/5",
             "gradientSpec": null
           }
         },
@@ -6413,9 +6446,9 @@
             "gradientSpec": null
           },
           "dark": {
-            "value": "#808080FF",
-            "alias": "border-default",
-            "primitiveAlias": "neutral/6",
+            "value": "#006CD7FF",
+            "alias": null,
+            "primitiveAlias": "blue/5",
             "gradientSpec": null
           }
         },
@@ -6431,9 +6464,9 @@
             "gradientSpec": null
           },
           "dark": {
-            "value": "#808080FF",
-            "alias": "border-default",
-            "primitiveAlias": "neutral/6",
+            "value": "#0056ACFF",
+            "alias": null,
+            "primitiveAlias": "blue/6",
             "gradientSpec": null
           }
         },
@@ -6449,9 +6482,9 @@
             "gradientSpec": null
           },
           "dark": {
-            "value": "#3389DFFF",
-            "alias": "border-focus",
-            "primitiveAlias": "blue/4",
+            "value": "#006CD7FF",
+            "alias": null,
+            "primitiveAlias": "blue/5",
             "gradientSpec": null
           }
         },
@@ -7583,9 +7616,9 @@
             "gradientSpec": null
           },
           "dark": {
-            "value": "#3389DFFF",
-            "alias": "border-focus",
-            "primitiveAlias": "blue/4",
+            "value": "#006CD7FF",
+            "alias": null,
+            "primitiveAlias": "blue/5",
             "gradientSpec": null
           }
         },
