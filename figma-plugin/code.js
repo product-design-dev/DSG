@@ -1664,7 +1664,17 @@ async function buildComponents(varMap, componentsToBuild, buildOptions, collecti
     }
   } catch (_applySetModesErr) {}
 
-  positionComponentSets(validSets, compSetGap);
+  // Position every managed component set currently on the page, not just the
+  // ones rebuilt this run. Previously this positioned only `validSets` (this
+  // run's freshly-built nodes), always starting from x=0 — correct for a full
+  // "build everything" sync, but for a scoped sync (e.g. just "Button") any
+  // component left untouched from an earlier *different* scoped sync (e.g.
+  // "Switch" alone, built in its own run that also started at x=0) was never
+  // repositioned, so two unrelated component sets could end up anchored to
+  // the exact same origin and land stacked directly on top of each other.
+  var allCurrentSets = collectManagedComponentSetsFromPage(page, null);
+  if (!allCurrentSets || allCurrentSets.length === 0) allCurrentSets = validSets;
+  positionComponentSets(allCurrentSets, compSetGap);
 
   // Docs are built for the component sets in this run. A scoped/partial sync
   // only rebuilds the docs for what it touched; the targeted-clear below leaves
