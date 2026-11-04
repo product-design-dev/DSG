@@ -16,6 +16,10 @@
   --accent-hover: #5483f0;
   --accent-soft: rgba(59, 111, 232, 0.12);
   --text: #e7e8ec;
+  /* h1/h2 read --text-h. This surface stays dark even if the Mantine scheme
+     is light, so resolve the heading token from this element's color-scheme
+     (set to dark below) instead of inheriting the light-surface value. */
+  --text-h: light-dark(#08060d, #f3f4f6);
   --text-secondary: #9298a6;
   --text-muted: #5b5f6b;
   --danger: #e0584f;
