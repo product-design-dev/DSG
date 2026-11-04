@@ -164,7 +164,7 @@ export default function DimensionTokenRow({
                 <>
                   <input
                     type="number"
-                    value={resolveDimension(brands, brandId, tokenName) ?? ""}
+                    value={resolveDimension(brands, brandId, tokenName) ?? 0}
                     onChange={(e) => {
                       const v = parseFloat(e.target.value);
                       if (!isNaN(v)) onUpdateDimension(tokenName, "_value", v);
@@ -255,7 +255,7 @@ export default function DimensionTokenRow({
                     ) : (
                       <input
                         type="number"
-                        value={val ?? ""}
+                        value={val ?? 0}
                         onChange={(e) => {
                           const v = parseFloat(e.target.value);
                           if (!isNaN(v)) onUpdateDimension(tokenName, size, v);

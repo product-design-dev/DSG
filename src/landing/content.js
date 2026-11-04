@@ -4,7 +4,7 @@ export const HOW_IT_WORKS = [
   {
     title: 'Set up your brand & tokens',
     description:
-      'Choose single or multi-brand, pick a token architecture (or let us pick for you), and choose what you’re building on — Tailwind, MUI, Mantine, or plain CSS.',
+      'Choose single or multi-brand, pick a token architecture (or let us pick for you), and preview every component on Mantine.',
   },
   {
     title: 'Customize every component visually',
@@ -33,8 +33,8 @@ export const FEATURES = [
     description: 'Two-tier, three-tier, flat, or bring your own naming — pick what fits, or let us recommend one.',
   },
   {
-    title: 'Framework-agnostic',
-    description: 'Export to Tailwind, MUI, Mantine, Chakra UI, plain CSS/Sass, or raw JSON for anything else.',
+    title: 'Mantine preview',
+    description: 'Preview components on Mantine, sync tokens to Figma, export Brands JSON, and launch Storybook.',
   },
   {
     title: 'Figma variable sync',
@@ -61,7 +61,7 @@ export const PRICING_TIERS = [
       '1 brand',
       '8 core components',
       'Two-tier or three-tier token architecture',
-      'Export tokens as JSON',
+      'Brands JSON export',
     ],
     cta: 'Get Started Free',
     badge: null,
@@ -110,7 +110,7 @@ export const FAQS = [
   },
   {
     question: 'Which frameworks are supported?',
-    answer: 'Tailwind CSS, MUI, Mantine, Chakra UI, and plain CSS/Sass are built in. You can also export raw tokens and wire them up yourself.',
+    answer: 'Component preview runs on Mantine. From there you can sync to Figma, export Brands JSON, and launch Storybook.',
   },
   {
     question: 'Can I manage multiple brands?',
@@ -126,7 +126,7 @@ export const FAQS = [
   },
   {
     question: 'What\'s included in the free plan?',
-    answer: '1 brand, 8 core components (Button, Card, Checkbox, Radio, Switch, Tabs, Divider, Tooltip), and JSON token export — no time limit.',
+    answer: '1 brand, 8 core components (Button, Card, Checkbox, Radio, Switch, Tabs, Divider, Tooltip), and Brands JSON export — no time limit.',
   },
   {
     question: 'Can I switch plans later?',

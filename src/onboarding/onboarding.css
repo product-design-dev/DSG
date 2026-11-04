@@ -190,6 +190,40 @@
   padding: 16px;
 }
 
+.option-card--compact .option-card-title {
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.option-card:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+  background: var(--bg-panel);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+.option-card:disabled:hover {
+  background: var(--bg-panel);
+  border-color: var(--border);
+}
+
+.option-card:disabled .option-card-description {
+  color: var(--text-muted);
+}
+
+.coming-soon-badge {
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.step .foundation-note {
+  margin-top: 16px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
 .option-card--auto {
   width: 100%;
   margin-bottom: 14px;
