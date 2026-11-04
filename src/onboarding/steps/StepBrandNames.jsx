@@ -1,5 +1,9 @@
+import { duplicateBrandIndexes } from '../validation'
+
 export default function StepBrandNames({ brandMode, brandNames, onChange }) {
   const isMulti = brandMode === 'multi'
+  const duplicateIndexes = duplicateBrandIndexes(brandNames)
+  const hasDuplicates = duplicateIndexes.size > 0
 
   function setName(index, value) {
     const next = [...brandNames]
@@ -31,6 +35,9 @@ export default function StepBrandNames({ brandMode, brandNames, onChange }) {
               type="text"
               value={name}
               placeholder={isMulti ? `Brand ${index + 1}` : 'e.g. Acme'}
+              aria-invalid={duplicateIndexes.has(index) || undefined}
+              aria-describedby={hasDuplicates ? 'brand-name-error' : undefined}
+              className={duplicateIndexes.has(index) ? 'name-input--invalid' : undefined}
               onChange={(e) => setName(index, e.target.value)}
             />
             {isMulti && brandNames.length > 2 && (
@@ -46,6 +53,12 @@ export default function StepBrandNames({ brandMode, brandNames, onChange }) {
           </div>
         ))}
       </div>
+
+      {hasDuplicates && (
+        <p id="brand-name-error" className="field-error" role="alert">
+          Brand names must be unique. These match when you ignore case and extra spaces.
+        </p>
+      )}
 
       {isMulti && (
         <button type="button" className="link-btn name-add" onClick={addBrand}>

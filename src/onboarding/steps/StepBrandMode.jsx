@@ -12,6 +12,7 @@ export default function StepBrandMode({ value, onChange }) {
             type="button"
             key={mode.key}
             className={`option-card ${value === mode.key ? 'option-card--selected' : ''}`}
+            aria-pressed={value === mode.key}
             onClick={() => onChange(mode.key)}
           >
             <span className="option-card-title">{mode.title}</span>

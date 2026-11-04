@@ -160,7 +160,8 @@
   background: var(--bg-card-hover);
 }
 
-.option-card--selected {
+.option-card--selected,
+.option-card--selected:hover {
   border-color: var(--accent);
   background: var(--accent-soft);
 }
@@ -226,12 +227,6 @@
 .option-card--auto {
   width: 100%;
   margin-bottom: 14px;
-  background: var(--accent-soft);
-  border-color: var(--accent);
-}
-
-.option-card--auto:hover {
-  background: var(--accent-soft);
 }
 
 .option-card-badge {
@@ -277,6 +272,11 @@
   border-color: var(--accent);
 }
 
+.name-row input.name-input--invalid,
+.name-row input.name-input--invalid:focus {
+  border-color: var(--danger);
+}
+
 .name-remove {
   background: none;
   border: 1px solid var(--border);
@@ -318,6 +318,59 @@
 .custom-input input:focus {
   outline: none;
   border-color: var(--accent);
+}
+
+.custom-input input.custom-input--invalid,
+.custom-input input.custom-input--invalid:focus {
+  border-color: var(--danger);
+}
+
+.onboarding p.field-error {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.onboarding .confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.onboarding .confirm-dialog {
+  width: min(440px, 100%);
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+
+.onboarding .confirm-dialog h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.onboarding .confirm-dialog p {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.confirm-names {
+  margin: 0 0 20px;
+  padding-left: 18px;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .review-list {
