@@ -1,5 +1,9 @@
 :root {
   --text: #6b6375;
+  /* Light-surface heading color. Dark surfaces remap this token in
+     src/appTheme.js (the active Mantine scheme) and src/marketing/theme.css
+     (landing and onboarding, which are always dark). prefers-color-scheme
+     alone is not the app surface: Mantine forces a dark scheme. */
   --text-h: #08060d;
   --bg: #fff;
   --border: #e5e4e7;

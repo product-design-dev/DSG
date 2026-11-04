@@ -104,6 +104,7 @@ function AuthenticatedApp() {
       onLaunch={markOnboardingComplete}
       userEmail={session.user.email}
       onLogout={handleLogout}
+      initialAnswers={session.user.user_metadata?.onboarding_answers ?? null}
     />
   );
 }

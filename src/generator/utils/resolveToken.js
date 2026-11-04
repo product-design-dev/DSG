@@ -360,9 +360,21 @@ export function resolveDimension(brands, brandId, tokenName, size) {
   if (!tokenDef || (tokenDef.type !== TOKEN_TYPES.FLOAT && tokenDef.type !== TOKEN_TYPES.STRING)) return null;
   const hasExplicitDefaultSize = Boolean(tokenDef.sizes && Object.prototype.hasOwnProperty.call(tokenDef.sizes, "default"));
   const fallbackSizeKey = tokenDef.sizes ? getFallbackSizeKey(tokenDef.sizes) : null;
+  // A brand's stored componentDefaults entry can itself be the literal string
+  // "default" (that's correct — it's what makes the Size *picker* start on
+  // "Default"). But that string is only a valid lookup key into this token's
+  // own `sizes` map when the token actually has an explicit "default" entry
+  // (e.g. switch-width). For a token that doesn't (e.g. button-line-height,
+  // which only has xxs/xs/sm/md/lg/xl), treating "default" as a real size key
+  // would look up `tokenDef.sizes.default` — undefined — and render blank.
+  // So a stored "default" only counts here when hasExplicitDefaultSize; any
+  // other stored value (a real size key) is always used as-is.
+  const storedDefault = getDefaultSizeKey(brands, brandId, tokenName);
+  const validStoredDefault =
+    storedDefault && (storedDefault !== "default" || hasExplicitDefaultSize);
   const effectiveSize =
     tokenDef.sizes && size === "default"
-      ? (getDefaultSizeKey(brands, brandId, tokenName) || (hasExplicitDefaultSize ? "default" : fallbackSizeKey))
+      ? (validStoredDefault ? storedDefault : (hasExplicitDefaultSize ? "default" : fallbackSizeKey))
       : size;
 
   // Check brand overrides first
