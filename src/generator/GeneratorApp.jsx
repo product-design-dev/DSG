@@ -1886,6 +1886,9 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
     if (!supabaseLoadedRef.current) return;
     if (supabaseSaveTimerRef.current) clearTimeout(supabaseSaveTimerRef.current);
     supabaseSaveTimerRef.current = setTimeout(() => {
+      // A dev restart clears this flag before deleting rows. Don't let a
+      // timer that already started recreate them.
+      if (!supabaseLoadedRef.current) return;
       Promise.all(
         Object.entries(brands).map(([brandKey, brandData]) =>
           upsertUserBrand(userId, brandKey, brandData?.name || brandKey, brandData)
@@ -2938,6 +2941,39 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
     URL.revokeObjectURL(url);
   };
 
+  // Dev-only. The ternary is statically null in production, so the handler,
+  // its dynamic import, and the dev module are absent from production builds.
+  const handleRestartOnboarding = import.meta.env.DEV
+    ? async (event) => {
+        const button = event.currentTarget;
+        button.disabled = true;
+        if (supabaseSaveTimerRef.current) {
+          clearTimeout(supabaseSaveTimerRef.current);
+          supabaseSaveTimerRef.current = null;
+        }
+        supabaseLoadedRef.current = false;
+        try {
+          const { restartOnboarding } = await import("../dev/restartOnboarding.js");
+          await restartOnboarding(userId, {
+            clearLocalBrands() {
+              try {
+                window.localStorage.removeItem(APP_STORAGE_KEY);
+              } catch {
+                // Storage can be blocked; the Supabase delete still stands.
+              }
+            },
+          });
+        } catch (err) {
+          supabaseLoadedRef.current = true;
+          button.disabled = false;
+          console.error("[DSG] Failed to restart onboarding:", err);
+          window.alert(
+            "Could not restart onboarding — please check your connection and try again.",
+          );
+        }
+      }
+    : null;
+
   const handleResetLocalData = () => {
     if (typeof window !== "undefined") {
       try {
@@ -3332,6 +3368,15 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
             Export
           </button>
           </div>
+          {import.meta.env.DEV && handleRestartOnboarding && (
+            <button
+              type="button"
+              onClick={handleRestartOnboarding}
+              style={{ background: "none", border: "none", color: "#FA5252", fontSize: 12, cursor: "pointer", padding: 0 }}
+            >
+              Restart onboarding
+            </button>
+          )}
           {onLogout && (
             <div style={{ display: "flex", alignItems: "center", gap: 12, paddingLeft: 12, marginLeft: 4, borderLeft: "1px solid #2C2E33" }}>
               {userEmail && (

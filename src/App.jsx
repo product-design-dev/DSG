@@ -7,7 +7,23 @@ import OnboardingFlow from "./onboarding/OnboardingFlow";
 import GeneratorApp from "./generator/GeneratorApp";
 import "./generator/index.css";
 
-function App() {
+export default function App() {
+  // `import.meta.env.DEV` is statically false in production builds, so this
+  // branch — including the `?onboarding=1` check — is removed from the bundle.
+  // The flow renders with no `onLaunch`, so finishing it never writes to Supabase.
+  if (import.meta.env.DEV && typeof window !== "undefined") {
+    const onboardingFlag = new URLSearchParams(window.location.search).get(
+      "onboarding",
+    );
+    if (onboardingFlag === "1") {
+      return <OnboardingFlow />;
+    }
+  }
+
+  return <AuthenticatedApp />;
+}
+
+function AuthenticatedApp() {
   const [session, setSession] = useState(undefined);
   const [showAuth, setShowAuth] = useState(false);
   const [recovering, setRecovering] = useState(false);
@@ -33,7 +49,9 @@ function App() {
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("[DSG] Sign out failed:", error);
-      window.alert("Could not log out — please check your connection and try again.");
+      window.alert(
+        "Could not log out — please check your connection and try again.",
+      );
       return;
     }
     setShowAuth(false);
@@ -88,5 +106,3 @@ function App() {
     />
   );
 }
-
-export default App;
