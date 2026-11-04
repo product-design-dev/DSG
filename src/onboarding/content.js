@@ -44,36 +44,44 @@ export const ARCHITECTURES = [
   },
 ]
 
+export const DEFAULT_LIBRARY = 'mantine'
+
 export const LIBRARIES = [
   {
     key: 'tailwind',
     title: 'Tailwind CSS',
-    description: 'Tokens export as a Tailwind theme config.',
+    description: 'Tailwind support is coming soon.',
+    available: false,
   },
   {
     key: 'mui',
     title: 'MUI',
-    description: 'Tokens export as a Material UI theme object.',
+    description: 'MUI support is coming soon.',
+    available: false,
   },
   {
     key: 'mantine',
     title: 'Mantine',
-    description: 'Tokens export as a Mantine theme.',
+    description: 'Live component preview on Mantine, with Figma sync, Brands JSON, and Storybook.',
+    available: true,
   },
   {
     key: 'chakra',
     title: 'Chakra UI',
-    description: 'Tokens export as a Chakra UI theme object.',
+    description: 'Chakra UI support is coming soon.',
+    available: false,
   },
   {
     key: 'css',
     title: 'Plain CSS / Sass',
-    description: 'Tokens export as CSS custom properties or Sass variables — no framework dependency.',
+    description: 'Plain CSS and Sass support is coming soon.',
+    available: false,
   },
   {
     key: 'other',
     title: 'Other / Manual',
-    description: 'Export raw token JSON and wire it up yourself.',
+    description: 'More foundations are coming soon.',
+    available: false,
   },
 ]
 
@@ -96,4 +104,59 @@ export function resolveArchitecture(answers) {
 
 export function stepIndexOf(key) {
   return STEPS.findIndex((s) => s.key === key)
+}
+
+export function normalizeLibraryKey(key) {
+  if (typeof key !== 'string') return null
+  const trimmed = key.trim()
+  return trimmed || null
+}
+
+export function getLibrary(key) {
+  const normalized = normalizeLibraryKey(key)
+  if (!normalized) return null
+  return LIBRARIES.find((lib) => lib.key === normalized.toLowerCase()) || null
+}
+
+export function isLibrarySelectable(key) {
+  return getLibrary(key)?.available === true
+}
+
+export function foundationLabel(key) {
+  return getLibrary(key)?.title || normalizeLibraryKey(key) || 'Not set'
+}
+
+export function resolveEffectiveLibrary(key) {
+  if (isLibrarySelectable(key)) return getLibrary(key)
+  return getLibrary(DEFAULT_LIBRARY)
+}
+
+const EMPTY_ANSWERS = {
+  brandMode: null,
+  brandNames: [''],
+  architecture: null,
+  customTiers: '',
+  library: DEFAULT_LIBRARY,
+}
+
+export function hydrateAnswers(saved) {
+  if (!saved || typeof saved !== 'object' || Array.isArray(saved)) {
+    return { ...EMPTY_ANSWERS, brandNames: [''] }
+  }
+
+  const brandNames =
+    Array.isArray(saved.brandNames) && saved.brandNames.length > 0
+      ? saved.brandNames.map((name) => (name == null ? '' : String(name)))
+      : ['']
+
+  const libraryKey = normalizeLibraryKey(saved.library)
+  const known = getLibrary(libraryKey)
+
+  return {
+    brandMode: typeof saved.brandMode === 'string' ? saved.brandMode : null,
+    brandNames,
+    architecture: typeof saved.architecture === 'string' ? saved.architecture : null,
+    customTiers: typeof saved.customTiers === 'string' ? saved.customTiers : '',
+    library: known ? known.key : libraryKey || DEFAULT_LIBRARY,
+  }
 }

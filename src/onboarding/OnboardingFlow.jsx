@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import { STEPS } from './content'
+import {
+  DEFAULT_LIBRARY,
+  STEPS,
+  hydrateAnswers,
+  isLibrarySelectable,
+  resolveEffectiveLibrary,
+} from './content'
 import Stepper from './Stepper'
 import StepBrandMode from './steps/StepBrandMode'
 import StepBrandNames from './steps/StepBrandNames'
@@ -9,14 +15,6 @@ import StepReview from './steps/StepReview'
 import MockBuilder from './MockBuilder'
 import '../marketing/theme.css'
 import './onboarding.css'
-
-const initialAnswers = {
-  brandMode: null,
-  brandNames: [''],
-  architecture: null,
-  customTiers: '',
-  library: null,
-}
 
 function canProceed(stepKey, answers) {
   switch (stepKey) {
@@ -30,15 +28,20 @@ function canProceed(stepKey, answers) {
       if (!answers.architecture) return false
       return answers.architecture === 'custom' ? answers.customTiers.trim().length > 0 : true
     case 'library':
-      return Boolean(answers.library)
+      return Boolean(resolveEffectiveLibrary(answers.library))
     default:
       return true
   }
 }
 
-export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
-  const [stepIndex, setStepIndex] = useState(0)
-  const [answers, setAnswers] = useState(initialAnswers)
+function initialStepIndex(answers) {
+  const blocked = STEPS.findIndex((step) => step.key !== 'review' && !canProceed(step.key, answers))
+  return blocked === -1 ? STEPS.length - 1 : blocked
+}
+
+export default function OnboardingFlow({ onLaunch, userEmail, onLogout, initialAnswers = null }) {
+  const [answers, setAnswers] = useState(() => hydrateAnswers(initialAnswers))
+  const [stepIndex, setStepIndex] = useState(() => initialStepIndex(hydrateAnswers(initialAnswers)))
   const [launched, setLaunched] = useState(false)
   const [launching, setLaunching] = useState(false)
   const [launchError, setLaunchError] = useState(null)
@@ -66,8 +69,9 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
   }
 
   function reset() {
-    setAnswers(initialAnswers)
-    setStepIndex(0)
+    const fresh = hydrateAnswers(null)
+    setAnswers(fresh)
+    setStepIndex(initialStepIndex(fresh))
     setLaunched(false)
   }
 
@@ -83,7 +87,10 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
     setLaunching(true)
     setLaunchError(null)
     try {
-      await onLaunch(answers)
+      await onLaunch({
+        ...answers,
+        library: resolveEffectiveLibrary(answers.library)?.key || DEFAULT_LIBRARY,
+      })
       setLaunched(true)
     } catch (err) {
       console.error('[DSG] Failed to complete onboarding:', err)
@@ -163,7 +170,12 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
             type="button"
             className="btn btn-primary"
             disabled={!proceedAllowed}
-            onClick={() => goTo(stepIndex + 1)}
+            onClick={() => {
+              if (step.key === 'library' && !isLibrarySelectable(answers.library)) {
+                setAnswers((prev) => ({ ...prev, library: DEFAULT_LIBRARY }))
+              }
+              goTo(stepIndex + 1)
+            }}
           >
             Continue
           </button>

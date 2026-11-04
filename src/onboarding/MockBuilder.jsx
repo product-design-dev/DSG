@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { LIBRARIES, resolveArchitecture } from './content'
+import { resolveArchitecture, resolveEffectiveLibrary } from './content'
 import './mock-builder.css'
 
 const SWATCH_SCALES = {
@@ -16,7 +16,7 @@ const COMPONENT_LIST = [
 
 export default function MockBuilder({ answers, onStartOver }) {
   const arch = resolveArchitecture(answers)
-  const lib = LIBRARIES.find((l) => l.key === answers.library)
+  const lib = resolveEffectiveLibrary(answers?.library)
   const names = answers.brandNames.filter(Boolean)
   const activeBrand = names[0] || 'Default'
   const otherBrands = names.slice(1)

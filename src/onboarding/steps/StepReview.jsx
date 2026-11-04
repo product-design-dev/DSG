@@ -1,9 +1,19 @@
-import { BRAND_MODES, LIBRARIES, resolveArchitecture, stepIndexOf } from '../content'
+import {
+  BRAND_MODES,
+  foundationLabel,
+  isLibrarySelectable,
+  normalizeLibraryKey,
+  resolveArchitecture,
+  resolveEffectiveLibrary,
+  stepIndexOf,
+} from '../content'
 
 export default function StepReview({ answers, onEdit, onLaunch, launching, launchError }) {
   const brand = BRAND_MODES.find((b) => b.key === answers.brandMode)
   const arch = resolveArchitecture(answers)
-  const lib = LIBRARIES.find((l) => l.key === answers.library)
+  const lib = resolveEffectiveLibrary(answers.library)
+  const savedKey = normalizeLibraryKey(answers.library)
+  const savedUnavailable = Boolean(savedKey) && !isLibrarySelectable(savedKey)
 
   return (
     <div className="step">
@@ -51,7 +61,15 @@ export default function StepReview({ answers, onEdit, onLaunch, launching, launc
         <div className="review-row">
           <div>
             <span className="label-caps">Foundation</span>
-            <p className="review-value">{lib?.title}</p>
+            <p className="review-value">
+              {lib?.title || 'Mantine'}
+              {savedUnavailable && (
+                <span className="review-value-sub">
+                  {' '}
+                  — saved choice {foundationLabel(savedKey)} is not available yet
+                </span>
+              )}
+            </p>
           </div>
           <button type="button" className="link-btn" onClick={() => onEdit(stepIndexOf('library'))}>
             Edit
