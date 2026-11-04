@@ -233,15 +233,20 @@ function loadPersistedAppState() {
   }
 }
 
-function postBrandsToDisk(stateObj) {
+function postBrandsToDisk(stateObj, { signal } = {}) {
   if (typeof window === "undefined" || typeof fetch === "undefined") return;
+  // No relay credential means the request can only 401. Skip it.
+  if (!RELAY_AUTH_HEADERS["X-Relay-Token"]) return;
+  if (signal?.aborted) return;
   try {
     const body = JSON.stringify(stateObj);
     fetch(`${RELAY_HTTP}/api/save-brands`, {
       method: "POST",
       headers: { "Content-Type": "application/json", ...RELAY_AUTH_HEADERS },
       body,
-    }).catch(() => {
+      signal,
+    }).catch((err) => {
+      if (err?.name === "AbortError") return;
       // Relay offline — localStorage remains the active fallback.
     });
   } catch (_err) {
@@ -708,6 +713,12 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
   const diskSaveTimerRef = useRef(null);
   const supabaseLoadedRef = useRef(false);
   const supabaseSaveTimerRef = useRef(null);
+  // Set on sign-out so a debounced relay save cannot fire after the session is gone.
+  const brandRelayStoppedRef = useRef(false);
+  const brandRelayAbortRef = useRef(null);
+  if (brandRelayAbortRef.current == null) brandRelayAbortRef.current = new AbortController();
+  const [restartConfirmOpen, setRestartConfirmOpen] = useState(false);
+  const [restartingOnboarding, setRestartingOnboarding] = useState(false);
   const [brandDeleteModalOpened, setBrandDeleteModalOpened] = useState(false);
   const [brandDeleteTargetId, setBrandDeleteTargetId] = useState(null);
   const [brandDeleteConfirmInput, setBrandDeleteConfirmInput] = useState("");
@@ -1872,11 +1883,23 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
     }
     // Durable disk autosave (debounced). Gated until the initial disk load has
     // run so stale startup state can't overwrite newer on-disk data.
-    if (diskLoadedRef.current) {
+    // Cleared on cleanup so sign-out cannot leave a POST in flight.
+    if (diskLoadedRef.current && !brandRelayStoppedRef.current) {
       if (diskSaveTimerRef.current) clearTimeout(diskSaveTimerRef.current);
-      diskSaveTimerRef.current = setTimeout(() => postBrandsToDisk(stateObj), 600);
+      const signal = brandRelayAbortRef.current?.signal;
+      diskSaveTimerRef.current = setTimeout(() => {
+        if (brandRelayStoppedRef.current || signal?.aborted) return;
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (brandRelayStoppedRef.current || signal?.aborted) return;
+          if (!session?.access_token || session.user?.id !== userId) return;
+          postBrandsToDisk(stateObj, { signal });
+        });
+      }, 600);
     }
-  }, [brands, activeBrand, previewTheme]);
+    return () => {
+      if (diskSaveTimerRef.current) clearTimeout(diskSaveTimerRef.current);
+    };
+  }, [brands, activeBrand, previewTheme, userId]);
 
   // Durable per-user autosave to Supabase (debounced). Gated until the initial
   // Supabase load/seed has resolved so pre-hydration state (the localStorage
@@ -1886,9 +1909,9 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
     if (!supabaseLoadedRef.current) return;
     if (supabaseSaveTimerRef.current) clearTimeout(supabaseSaveTimerRef.current);
     supabaseSaveTimerRef.current = setTimeout(() => {
-      // A dev restart clears this flag before deleting rows. Don't let a
-      // timer that already started recreate them.
-      if (!supabaseLoadedRef.current) return;
+      // A dev restart or sign-out clears this flag before deleting rows. Don't
+      // let a timer that already started recreate them.
+      if (!supabaseLoadedRef.current || brandRelayStoppedRef.current) return;
       Promise.all(
         Object.entries(brands).map(([brandKey, brandData]) =>
           upsertUserBrand(userId, brandKey, brandData?.name || brandKey, brandData)
@@ -1911,45 +1934,83 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
   // port change or browser clear — the disk file is origin-independent.
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (!userId || brandRelayStoppedRef.current) return;
+    if (!RELAY_AUTH_HEADERS["X-Relay-Token"]) return;
+    const controller = new AbortController();
+    const stopSignal = brandRelayAbortRef.current?.signal;
+    if (stopSignal) {
+      if (stopSignal.aborted) controller.abort();
+      else stopSignal.addEventListener("abort", () => controller.abort(), { once: true });
+    }
     let cancelled = false;
     (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (cancelled || controller.signal.aborted || brandRelayStoppedRef.current) return;
+      if (!session?.access_token || session.user?.id !== userId) return;
       let adopted = false;
+      let failed = false;
       try {
-        const res = await fetch(`${RELAY_HTTP}/api/brands`, { headers: RELAY_AUTH_HEADERS });
-        const data = res.ok ? await res.json() : null;
-        if (!cancelled && data && !data.missing && data.brands && typeof data.brands === "object") {
-          const localAt = initialLocalRef.current.savedAt;
-          const localHasBrands = initialLocalRef.current.hasBrands;
-          const diskAt = Number(data.savedAt || 0);
-          if (!localHasBrands || diskAt >= localAt) {
-            adopted = true;
-            setBrands(enforceTextDefaultMappings(mergeRecoveredBrands(data.brands)));
-            if (data.activeBrand) setActiveBrand(data.activeBrand);
-            if (data.previewTheme === "light" || data.previewTheme === "dark") {
-              setPreviewTheme(data.previewTheme);
+        const res = await fetch(`${RELAY_HTTP}/api/brands`, {
+          headers: RELAY_AUTH_HEADERS,
+          signal: controller.signal,
+        });
+        if (cancelled || controller.signal.aborted) return;
+        // A 401 (or any failure) must not be treated as "no file yet" and
+        // followed by a save — that second call 401s the same way.
+        if (!res.ok) {
+          failed = true;
+        } else {
+          const data = await res.json();
+          if (!cancelled && data && !data.missing && data.brands && typeof data.brands === "object") {
+            const localAt = initialLocalRef.current.savedAt;
+            const localHasBrands = initialLocalRef.current.hasBrands;
+            const diskAt = Number(data.savedAt || 0);
+            if (!localHasBrands || diskAt >= localAt) {
+              adopted = true;
+              setBrands(enforceTextDefaultMappings(mergeRecoveredBrands(data.brands)));
+              if (data.activeBrand) setActiveBrand(data.activeBrand);
+              if (data.previewTheme === "light" || data.previewTheme === "dark") {
+                setPreviewTheme(data.previewTheme);
+              }
             }
           }
         }
-      } catch (_err) {
+      } catch (err) {
+        if (err?.name === "AbortError") return;
+        failed = true;
         // Relay offline — localStorage remains the source of truth.
       } finally {
-        if (!cancelled) {
+        if (!cancelled && !controller.signal.aborted && !brandRelayStoppedRef.current) {
           diskLoadedRef.current = true;
           // If we didn't adopt disk state, flush the current (localStorage)
           // state to disk so the file exists and stays current. When we DID
           // adopt, the resulting setBrands re-render triggers the save effect,
           // which posts the adopted state.
-          if (!adopted) {
-            postBrandsToDisk({ brands, activeBrand, previewTheme, savedAt: Date.now() });
+          if (!failed && !adopted) {
+            const { data: { session: still } } = await supabase.auth.getSession();
+            if (
+              !cancelled &&
+              !controller.signal.aborted &&
+              !brandRelayStoppedRef.current &&
+              still?.access_token &&
+              still.user?.id === userId
+            ) {
+              postBrandsToDisk(
+                { brands, activeBrand, previewTheme, savedAt: Date.now() },
+                { signal: controller.signal },
+              );
+            }
           }
         }
       }
     })();
     return () => {
       cancelled = true;
+      controller.abort();
+      if (diskSaveTimerRef.current) clearTimeout(diskSaveTimerRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [userId]);
 
   // Load this user's brands from Supabase (the durable, cross-device source of
   // truth). If rows already exist, they win over whatever localStorage/disk
@@ -2941,12 +3002,28 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
     URL.revokeObjectURL(url);
   };
 
+  // Drops debounced relay/Supabase saves and aborts an in-flight brands
+  // request so sign-out cannot 401 against the local relay.
+  const stopBrandRelay = () => {
+    brandRelayStoppedRef.current = true;
+    diskLoadedRef.current = false;
+    supabaseLoadedRef.current = false;
+    if (diskSaveTimerRef.current) {
+      clearTimeout(diskSaveTimerRef.current);
+      diskSaveTimerRef.current = null;
+    }
+    if (supabaseSaveTimerRef.current) {
+      clearTimeout(supabaseSaveTimerRef.current);
+      supabaseSaveTimerRef.current = null;
+    }
+    brandRelayAbortRef.current?.abort();
+  };
+
   // Dev-only. The ternary is statically null in production, so the handler,
   // its dynamic import, and the dev module are absent from production builds.
   const handleRestartOnboarding = import.meta.env.DEV
-    ? async (event) => {
-        const button = event.currentTarget;
-        button.disabled = true;
+    ? async () => {
+        setRestartingOnboarding(true);
         if (supabaseSaveTimerRef.current) {
           clearTimeout(supabaseSaveTimerRef.current);
           supabaseSaveTimerRef.current = null;
@@ -2963,9 +3040,10 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
               }
             },
           });
+          setRestartConfirmOpen(false);
         } catch (err) {
           supabaseLoadedRef.current = true;
-          button.disabled = false;
+          setRestartingOnboarding(false);
           console.error("[DSG] Failed to restart onboarding:", err);
           window.alert(
             "Could not restart onboarding — please check your connection and try again.",
@@ -3369,13 +3447,46 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
           </button>
           </div>
           {import.meta.env.DEV && handleRestartOnboarding && (
-            <button
-              type="button"
-              onClick={handleRestartOnboarding}
-              style={{ background: "none", border: "none", color: "#FA5252", fontSize: 12, cursor: "pointer", padding: 0 }}
-            >
-              Restart onboarding
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={() => setRestartConfirmOpen(true)}
+                style={{ background: "none", border: "none", color: "#FA5252", fontSize: 12, cursor: "pointer", padding: 0 }}
+              >
+                Restart onboarding
+              </button>
+              <Modal
+                opened={restartConfirmOpen}
+                onClose={() => {
+                  if (!restartingOnboarding) setRestartConfirmOpen(false);
+                }}
+                title="Restart onboarding"
+                centered
+                overlayProps={{ backgroundOpacity: 0.55 }}
+              >
+                <Stack gap="md">
+                  <Text size="sm">
+                    This deletes your brands and resets onboarding. You will set them up again from the start.
+                  </Text>
+                  <Group justify="flex-end" mt="xs">
+                    <Button
+                      variant="default"
+                      disabled={restartingOnboarding}
+                      onClick={() => setRestartConfirmOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      color="red"
+                      loading={restartingOnboarding}
+                      onClick={handleRestartOnboarding}
+                    >
+                      Restart onboarding
+                    </Button>
+                  </Group>
+                </Stack>
+              </Modal>
+            </>
           )}
           {onLogout && (
             <div style={{ display: "flex", alignItems: "center", gap: 12, paddingLeft: 12, marginLeft: 4, borderLeft: "1px solid #2C2E33" }}>
@@ -3383,7 +3494,17 @@ export default function GeneratorApp({ userEmail, userId, onboardingAnswers, onL
                 <span style={{ fontSize: 12, color: "#5C5F66" }}>{userEmail}</span>
               )}
               <button
-                onClick={onLogout}
+                type="button"
+                onClick={async () => {
+                  stopBrandRelay();
+                  const signedOut = await onLogout();
+                  if (signedOut === false) {
+                    brandRelayStoppedRef.current = false;
+                    brandRelayAbortRef.current = new AbortController();
+                    diskLoadedRef.current = true;
+                    supabaseLoadedRef.current = true;
+                  }
+                }}
                 style={{ background: "none", border: "none", color: "#748FFC", fontSize: 12, cursor: "pointer", padding: 0 }}
               >
                 Log Out

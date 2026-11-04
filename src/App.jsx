@@ -52,9 +52,10 @@ function AuthenticatedApp() {
       window.alert(
         "Could not log out — please check your connection and try again.",
       );
-      return;
+      return false;
     }
     setShowAuth(false);
+    return true;
   };
 
   // Throws on failure so callers (the onboarding "Create my design system"
