@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { STEPS } from './content'
+import { duplicateBrandIndexes, parseCustomTiers } from './validation'
 import Stepper from './Stepper'
 import StepBrandMode from './steps/StepBrandMode'
 import StepBrandNames from './steps/StepBrandNames'
@@ -22,13 +23,16 @@ function canProceed(stepKey, answers) {
   switch (stepKey) {
     case 'brand':
       return Boolean(answers.brandMode)
-    case 'names':
-      return answers.brandMode === 'multi'
-        ? answers.brandNames.length >= 2 && answers.brandNames.every((n) => n.trim().length > 0)
-        : answers.brandNames[0]?.trim().length > 0
+    case 'names': {
+      const filled =
+        answers.brandMode === 'multi'
+          ? answers.brandNames.length >= 2 && answers.brandNames.every((n) => n.trim().length > 0)
+          : Boolean(answers.brandNames[0]?.trim().length > 0)
+      return filled && duplicateBrandIndexes(answers.brandNames).size === 0
+    }
     case 'architecture':
       if (!answers.architecture) return false
-      return answers.architecture === 'custom' ? answers.customTiers.trim().length > 0 : true
+      return answers.architecture === 'custom' ? parseCustomTiers(answers.customTiers).ok : true
     case 'library':
       return Boolean(answers.library)
     default:
@@ -42,6 +46,7 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
   const [launched, setLaunched] = useState(false)
   const [launching, setLaunching] = useState(false)
   const [launchError, setLaunchError] = useState(null)
+  const [pendingDrop, setPendingDrop] = useState(null)
 
   const step = STEPS[stepIndex]
 
@@ -49,7 +54,7 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
     setAnswers((prev) => ({ ...prev, ...patch }))
   }
 
-  function setBrandMode(mode) {
+  function applyBrandMode(mode) {
     setAnswers((prev) => {
       const brandNames =
         mode === 'single'
@@ -61,6 +66,29 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
     })
   }
 
+  // Switching Multiple → Single keeps only the first name. Confirm first when
+  // that would throw away names the user actually typed.
+  function setBrandMode(mode) {
+    if (mode === 'single' && answers.brandMode === 'multi') {
+      const dropped = answers.brandNames
+        .slice(1)
+        .map((name) => name.trim())
+        .filter((name) => name.length > 0)
+      if (dropped.length > 0) {
+        setPendingDrop(dropped)
+        return
+      }
+    }
+    applyBrandMode(mode)
+  }
+
+  const cancelDrop = useCallback(() => setPendingDrop(null), [])
+
+  function confirmDropToSingle() {
+    applyBrandMode('single')
+    setPendingDrop(null)
+  }
+
   function goTo(index) {
     setStepIndex(Math.max(0, Math.min(STEPS.length - 1, index)))
   }
@@ -69,6 +97,7 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
     setAnswers(initialAnswers)
     setStepIndex(0)
     setLaunched(false)
+    setPendingDrop(null)
   }
 
   // Awaits onLaunch (persists onboarding_complete to Supabase) before
@@ -149,6 +178,10 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
         )}
       </main>
 
+      {pendingDrop && (
+        <DropBrandsDialog names={pendingDrop} onCancel={cancelDrop} onConfirm={confirmDropToSingle} />
+      )}
+
       {!isLastStep && (
         <footer className="onboarding-footer">
           <button
@@ -169,6 +202,45 @@ export default function OnboardingFlow({ onLaunch, userEmail, onLogout }) {
           </button>
         </footer>
       )}
+    </div>
+  )
+}
+
+function DropBrandsDialog({ names, onCancel, onConfirm }) {
+  useEffect(() => {
+    function onKey(event) {
+      if (event.key === 'Escape') onCancel()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [onCancel])
+
+  return (
+    <div className="confirm-backdrop" onClick={onCancel}>
+      <div
+        className="confirm-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="drop-brands-title"
+        aria-describedby="drop-brands-body"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <h2 id="drop-brands-title">Switch to a single brand?</h2>
+        <p id="drop-brands-body">Only the first brand name is kept. These extra names will be removed:</p>
+        <ul className="confirm-names">
+          {names.map((name, index) => (
+            <li key={`${name}-${index}`}>{name}</li>
+          ))}
+        </ul>
+        <div className="confirm-actions">
+          <button type="button" className="btn btn-ghost" onClick={onCancel} autoFocus>
+            Cancel
+          </button>
+          <button type="button" className="btn btn-primary" onClick={onConfirm}>
+            Remove extra brands
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

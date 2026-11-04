@@ -16,6 +16,7 @@ export default function StepLibrary({ value, onChange }) {
             className={`option-card option-card--compact ${
               value === lib.key ? 'option-card--selected' : ''
             }`}
+            aria-pressed={value === lib.key}
             onClick={() => onChange(lib.key)}
           >
             <span className="option-card-title">{lib.title}</span>
